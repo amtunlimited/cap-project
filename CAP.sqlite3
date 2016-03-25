@@ -1,0 +1,41 @@
+CREATE TABLE Employee (
+	EmployeeID INTEGER NOT NULL PRIMARY KEY,
+	FirstName TEXT NOT NULL,
+	LastName TEXT NOT NULL,
+	Role TEXT NOT NULL
+);
+
+CREATE TABLE TimeSheet (
+	EventID INTEGER NOT NULL PRIMARY KEY,
+	EmployeeID INTEGER NOT NULL,
+	TimeStamp INTEGER NOT NULL, --Unix time
+	Type TEXT NOT NULL,
+	FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
+);
+
+CREATE TABLE Purchase (
+	PurchaseNumber INTEGER NOT NULL PRIMARY KEY,
+	EmployeeID INTEGER NOT NULL,
+	PaymentMethod TEXT NOT NULL,
+	FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
+);
+
+CREATE TABLE Inventory (
+	ProductNumber INTEGER NOT NULL PRIMARY KEY,
+	Description TEXT NOT NULL,
+	Price REAL NOT NULL,
+	Count INTEGER NOT NULL,
+	Threshold INTEGER NOT NULL,
+	Taxable INTEGER NOT NULL, -- No booleans in SQLite, just 0 and 1
+	Cost REAL NOT NULL
+);
+	
+CREATE TABLE PurchaseItem (
+	PurchaseLineID INTEGER NOT NULL PRIMARY KEY,
+	PurchaseNumber INTEGER NOT NULL,
+	ProductNumber INTEGER NOT NULL,
+	Count INTEGER NOT NULL,
+	FOREIGN KEY(PurchaseNumber) REFERENCES Purchase(PurchaseNumber),
+	FOREIGN KEY(ProductNumber) REFERENCES Inventory(ProductNumber)
+);
+
