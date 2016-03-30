@@ -1,0 +1,266 @@
+<html>
+	<head>
+		<title>Register</title>
+	</head>
+	<body>	
+		<input id="itemList" list="items" autofocus placeholder="Enter an Item" style='width:89%;'>
+		<button id="add" style='width:10%;' onclick="addToOrder()">Add Item</button>
+		<datalist id="items">
+			<option value="iPhone 6s Plus Screen">iPhone 6s Plus Screen</option>
+			<option value="iPhone 6s Screen">iPhone 6s Screen</option>
+			<option value="iPhone 6 Plus Screen">iPhone 6 Plus Screen</option>
+			<option value="iPhone 6 Screen">iPhone 6 Screen</option>
+			<option value="iPhone 5s Screen">iPhone 5s Screen</option>
+			<option value="iPhone 5c Screen">iPhone 5c Screen</option>
+			<option value="iPhone 5 Screen">iPhone 5 Screen</option>
+			<option value="iPhone 4s Screen">iPhone 4s Screen</option>
+			<option value="iPhone 4 Screen">iPhone 4 Screen</option>
+			<option value="Labor Charge">Labor Charge</option>
+		</datalist>
+		
+		<br><br>
+		
+		<table style="width:99%" id="saleItems" border="1">
+			<tr>
+				<td></td>
+				<th>Item</th>
+				<th>Description</th>
+				<th>Quantity</th>
+				<th>Price</th>
+			</tr>
+		</table>
+		
+		<br><br>
+		<table style="width:99%">
+			<tr>
+				<td><button>Cash</button> &nbsp&nbsp <button>Credit Card</button> &nbsp&nbsp <button>Check</button></td>
+				<td><label>Discount&nbsp: &nbsp <input id="discount" value="0.0" pattern="[0-9]*" onblur="updateTotal()"></label></td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td><label>Subtotal &nbsp: &nbsp <input id="subtotal" readonly></label></td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td><label>Tax &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp <input id="tax" readonly></label></td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td><label>Total &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp <input id="total" readonly></label></td>
+			</tr>
+		</table>
+		<script>
+			var appi6sp = 325.00;
+			var appi6s = 225.00;
+			var appi6p = 125.00;
+			var appi6 = 110.00;
+			var appi5s = 50.00;
+			var appi5c = 40.00;
+			var appi5 = 30.00;
+			var appi4s = 20.00;
+			var appi4 = 10.00;
+			var labor = 50.00;
+			var changed = false;
+			
+			//Adds the item currently displayed in itemList to the saleItems table
+			function addToOrder(){
+				var input = document.getElementById("itemList").value;
+				var price = 0;
+				var item = "";
+				document.getElementById("itemList").value = '';
+				document.getElementById("itemList").focus();
+				
+				if(input.length != 0){
+					if(input == "iPhone 6s Plus Screen"){
+						item = "appi6sp";
+						price = appi6sp;
+					}else if(input == "iPhone 6s Screen"){
+						item = "appi6s";
+						price = appi6s;
+					}else if(input == "iPhone 6 Plus Screen"){
+						item = "appi6p";
+						price = appi6p;
+					}else if(input == "iPhone 6 Screen"){
+						item = "appi6";
+						price = appi6;
+					}else if(input == "iPhone 5s Screen"){
+						item = "appi5s";
+						price = appi5s;
+					}else if(input == "iPhone 5c Screen"){
+						item = "appi5c";
+						price = appi5c;
+					}else if(input == "iPhone 5 Screen"){
+						item = "appi5";
+						price = appi5;
+					}else if(input == "iPhone 4s Screen"){
+						item = "appi4s";
+						price = appi4s;
+					}else if(input == "iPhone 4 Screen"){
+						item = "appi4";
+						price = appi4;
+					}else if(input == "Labor Charge"){
+						item = "labor";
+						price = labor;
+					}else{
+						return false;
+					}
+					
+					//grab the table from the document
+					var table = document.getElementById("saleItems");
+					
+					//add a row to the table
+					var row = table.insertRow(1);
+					
+					//Insert new cells into the new row
+					var deleteCell = row.insertCell(0);
+					var itemCell = row.insertCell(1);
+					var descriptionCell = row.insertCell(2);
+					var quantityCell = row.insertCell(3);
+					var priceCell = row.insertCell(4);
+					
+					//input the information into the new cells
+					deleteCell.innerHTML = "<button onclick=\"deleteRow(this)\">X</button>";
+					itemCell.innerHTML = item;
+					descriptionCell.innerHTML = input;
+					quantityCell.innerHTML = "<input pattern=\"[0-9]*\" onChange=\"updatePrice(this)\" type=\"number\" value=\"1\">";
+					priceCell.innerHTML = "<input pattern=\"[0-9]*\" onChange=\"change()\" onblur=\"updatePricePer(this)\" value="+ price +">";
+					
+					format(priceCell.children[0]);
+					
+					updateTotal();
+				}
+			}
+			
+			function deleteRow(t){
+				var row = t.parentNode.parentNode;
+				document.getElementById("saleItems").deleteRow(row.rowIndex);
+				
+				updateTotal();
+			}
+			
+			function updateTotal(){
+				var discount = document.getElementById("discount");
+				
+				if(discount.value.length == 0){
+					discount.value = 0.0;
+				}
+				
+				var rows = document.getElementById("saleItems").rows;
+				var subtotal = 0;
+				
+				for(x = 1; x < rows.length; x++){
+					if(rows[x].cells[1].innerHTML == "appi6sp"){
+						subtotal += rows[x].cells[3].children[0].value * appi6sp;
+					}else if(rows[x].cells[1].innerHTML == "appi6s"){
+						subtotal += rows[x].cells[3].children[0].value * appi6s;
+					}else if(rows[x].cells[1].innerHTML == "appi6p"){
+						subtotal += rows[x].cells[3].children[0].value * appi6p;
+					}else if(rows[x].cells[1].innerHTML == "appi6"){
+						subtotal += rows[x].cells[3].children[0].value * appi6;
+					}else if(rows[x].cells[1].innerHTML == "appi5s"){
+						subtotal += rows[x].cells[3].children[0].value * appi5s;
+					}else if(rows[x].cells[1].innerHTML == "appi5c"){
+						subtotal += rows[x].cells[3].children[0].value * appi5c;
+					}else if(rows[x].cells[1].innerHTML == "appi5"){
+						subtotal += rows[x].cells[3].children[0].value * appi5;
+					}else if(rows[x].cells[1].innerHTML == "appi4s"){
+						subtotal += rows[x].cells[3].children[0].value * appi4s;
+					}else if(rows[x].cells[1].innerHTML == "appi4"){
+						subtotal += rows[x].cells[3].children[0].value * appi4;
+					}else if(rows[x].cells[1].innerHTML == "labor"){
+						subtotal += rows[x].cells[3].children[0].value * labor;
+					}
+				}
+				
+				subtotal -= parseFloat(document.getElementById("discount").value);
+				
+				document.getElementById("subtotal").value = subtotal;
+				document.getElementById("tax").value = subtotal * 0.06;
+				document.getElementById("total").value = subtotal * 1.06;
+				
+				format(document.getElementById("discount"));
+				format(document.getElementById("subtotal"));
+				format(document.getElementById("tax"));
+				format(document.getElementById("total"));
+			}
+			
+			function updatePrice(t){
+				var row = t.parentNode.parentNode;
+				
+				if(row.cells[1].innerHTML == "appi6sp"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi6sp;
+				}else if(row.cells[1].innerHTML == "appi6s"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi6s;
+				}else if(row.cells[1].innerHTML == "appi6p"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi6p;
+				}else if(row.cells[1].innerHTML == "appi6"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi6;
+				}else if(row.cells[1].innerHTML == "appi5s"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi5s;
+				}else if(row.cells[1].innerHTML == "appi5c"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi5c;
+				}else if(row.cells[1].innerHTML == "appi5"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi5;
+				}else if(row.cells[1].innerHTML == "appi4s"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi4s;
+				}else if(row.cells[1].innerHTML == "appi4"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * appi4;
+				}else if(row.cells[1].innerHTML == "labor"){
+					row.cells[4].children[0].value =  row.cells[3].children[0].value * labor;
+				}
+				
+				format(row.cells[4].children[0]);
+				
+				updateTotal();
+			}
+			
+			function updatePricePer(t){
+				var row = t.parentNode.parentNode;
+				
+				if(!changed){
+					return false;
+				}
+				
+				if(row.cells[1].innerHTML == "appi6sp"){
+					appi6sp = row.cells[4].children[0].value;
+				}else if(row.cells[1].innerHTML == "appi6s"){
+					appi6s = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi6p"){
+					appi6p = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi6"){
+					appi6 = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi5s"){
+					appi5s = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi5c"){
+					appi5c = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi5"){
+					appi5 = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi4s"){
+					appi4s = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "appi4"){
+					appi4 = row.cells[4].children[0].value;;
+				}else if(row.cells[1].innerHTML == "labor"){
+					labor = row.cells[4].children[0].value;;
+				}
+				
+				changed = false;
+				
+				updatePrice(t);
+			}
+			
+			function change(){
+				changed = true;
+			}
+			
+			function format(t){    
+				t.value = parseFloat(t.value.replace(/,/g, ""))
+							.toFixed(2)
+							.toString()
+							.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+		</script>
+	</body>
+</html>
