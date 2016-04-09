@@ -19,6 +19,10 @@
 		</datalist>
 		
 		<br><br>
+		<div>
+			<label>Item Number<input type="text" id="pnumber"></input></label>
+			<input type="button" id="item" value="Check"></input>
+		</div>
 		
 		<table style="width:99%" id="saleItems" border="1">
 			<tr>
@@ -52,6 +56,7 @@
 				<td><label>Total &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp <input id="total" readonly></label></td>
 			</tr>
 		</table>
+		<!--
 		<script>
 			var appi6sp = 325.00;
 			var appi6s = 225.00;
@@ -260,6 +265,25 @@
 							.toFixed(2)
 							.toString()
 							.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+		</script>
+		-->
+		<script>
+			document.getElementById('item').addEventListener('click', function(event) {
+				var jsonItemReq = new XMLHttpRequest();
+				jsonItemReq.onreadystatechange = function() {
+					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+						var item = JSON.parse(jsonItemReq.responseText);
+						updateTable(item);
+					}
+				}
+
+				jsonItemReq.open("POST", "/item/", true);
+				jsonItemReq.send(document.getElementById('pnumber').value);
+			});
+
+			var updateTable = function(item) {
+				console.log("Description: " + item.Description);
 			}
 		</script>
 	</body>

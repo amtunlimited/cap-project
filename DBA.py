@@ -1,6 +1,6 @@
 import web
 
-db = web.database(dbn = 'sqlite', db = 'CAP')
+db = web.database(dbn = 'sqlite', db = 'cap.db')
 
 #add a new item to inventory
 def addItem(productNumber, description, price, count, threshold, taxable, cost):
@@ -9,7 +9,7 @@ def addItem(productNumber, description, price, count, threshold, taxable, cost):
 #get the item from inventory with the given product number
 def getItem(productNumber):
 	try:
-		return db.select('Inventory', where='ProductNumber=$productNumber')[0]
+		return db.select('Inventory', where='ProductNumber=$productNumber', vars=locals())[0]
 	except IndexError:
 		return None
 
@@ -23,6 +23,6 @@ def updateCount(productNumber, delta):
 		'UPDATE Inventory \
 		SET count = count + $delta \
 		WHERE ProductNumber = $productNumber',
-		vars={productNumber = productNumber, delta = delta}
+		vars=locals()
 	)
 	
