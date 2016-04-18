@@ -3,8 +3,8 @@ import web
 db = web.database(dbn = 'sqlite', db = 'cap.db')
 
 #add a new item to inventory
-def addItem(productNumber, description, price, count, threshold, taxable, cost):
-	db.insert('Inventory', ProductNumber=productNumber, Description=description, Price=price, Count=count, Threshold=threshold, Taxable=taxable, Cost=cost)
+def addItem(description, price, count, threshold, taxable, cost):
+	db.insert('Inventory', Description=description, Price=price, Count=count, Threshold=threshold, Taxable=taxable, Cost=cost)
 
 #remove item with given productNumber from inventory
 def removeItem(productNumber):
