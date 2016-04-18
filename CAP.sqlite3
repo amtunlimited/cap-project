@@ -2,7 +2,8 @@ CREATE TABLE Employee (
 	EmployeeID INTEGER NOT NULL PRIMARY KEY,
 	FirstName TEXT NOT NULL,
 	LastName TEXT NOT NULL,
-	Role TEXT NOT NULL
+	Role TEXT NOT NULL,
+	Password TEXT NOT NULL
 );
 
 CREATE TABLE TimeSheet (
@@ -38,4 +39,10 @@ CREATE TABLE PurchaseItem (
 	FOREIGN KEY(PurchaseNumber) REFERENCES Purchase(PurchaseNumber),
 	FOREIGN KEY(ProductNumber) REFERENCES Inventory(ProductNumber)
 );
+
+CREATE TABLE Setting(
+	SettingID INTEGER NOT NULL PRIMARY KEY,
+	SettingValue STRING NOT NULL
+);
+
 
