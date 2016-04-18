@@ -84,3 +84,7 @@ def updateEmployeeRole(employeeID, role):
 #update Password for Employee
 def updateEmployeePassword(employeeID, password):
 	db.update('Employee', where='EmployeeID=$employeeID', vars=locals(), Password=password)
+
+#create new TimeSheet event
+def addTimeSheetEvent(employeeID, timeStamp, eventType):
+	db.insert('TimeSheet', EmployeeID=employeeID, TimeStamp=timeStamp, Type=eventType)
