@@ -25,7 +25,7 @@ class item:
 
 class index:
 	def GET(self):
-		if(session.user==0):
+		if(session.user!=1):
 			raise web.seeother('/login/')
 
 		index = web.template.frender('index.html')
@@ -45,7 +45,8 @@ class login:
 			
 class logout:
 	def GET(self):
-		session.kill()
+		#session.kill()
+		session.user=0
 		raise web.seeother('/login/')
 
 if __name__ == "__main__":
