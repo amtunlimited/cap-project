@@ -274,6 +274,7 @@
 				jsonItemReq.onreadystatechange = function() {
 					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
 						var item = JSON.parse(jsonItemReq.responseText);
+						console.log(jsonItemReq.responseText);
 						updateTable(item);
 					}
 				}
