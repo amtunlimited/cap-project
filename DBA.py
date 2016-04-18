@@ -23,27 +23,27 @@ def getAllItems():
 
 #update description for item
 def updateDescription(productNumber, description):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Description=description
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Description=description)
 
 #update Price for item
 def updatePrice(productNumber, price):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Price=price
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Price=price)
 
 #update Cost for item
 def updateCost(productNumber, cost):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Cost=cost
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Cost=cost)
 
 #update Threshold for item
 def updateThreshold(productNumber, threshold):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Threshold=threshold
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Threshold=threshold)
 
 #update Count for item
 def updateCount(productNumber, count):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Count=count
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Count=count)
 
 #update Taxable for item
 def updateTaxable(productNumber, taxable):
-	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Taxable=taxable
+	db.update('Inventory', where='ProductNumber=$productNumber', vars=locals(), Taxable=taxable)
 
 #increment (or decrement with negative delta) item's count field
 def incrementCount(productNumber, delta):
