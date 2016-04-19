@@ -24,8 +24,11 @@ urls = (
 )
 
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 0, 'loginTime': datetime.datetime.now()})
+session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 0, 'role':0})
 
+def loggedIn(role):
+	if(session.user == 0 or session.role < role):
+		raise web.seeother('/login/')
 
 class item:
 	def POST(self):
@@ -90,16 +93,18 @@ class updateTax:
 
 class inventory:
 	def GET(self):
-		if(session.user!=1):
-			raise web.seeother('/login/')
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(2)
 
 		index = web.template.frender('inventory.html')
 		return index()
 
 class index:
 	def GET(self):
-		if(session.user!=1):
-			raise web.seeother('/login/')
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
 
 		index = web.template.frender('index.html')
 		return index()
@@ -110,19 +115,23 @@ class login:
 		return login()
 	
 	def POST(self):
-		if(web.input().user=="1" and web.input().password=="password"):
-			session.user=1
-			session.loginTime = datetime.datetime.now()
-			DBA.addTimeSheetEvent(session.user, session.loginTime, "ClockIn")
-			raise web.seeother('/')
-		else:
+		inputs = web.input()
+		emp = DBA.getEmployee(inputs.user)
+		if(emp == None or inputs.password != emp.Password):
 			raise web.seeother('/login/')
+		else:
+			session.user=emp.EmployeeID
+			session.role=emp.Role
+			session.loginTime = datetime.datetime.now()
+			DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockIn")
+			raise web.seeother('/')
 			
 class logout:
 	def GET(self):
 		#session.kill()
 		DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockOut")
 		session.user=0
+		session.role=1
 		raise web.seeother('/login/')
 
 if __name__ == "__main__":

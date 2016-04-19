@@ -1,0 +1,5 @@
+INSERT INTO Employee (EmployeeID, FirstName, LastName, Role, Password) VALUES
+	(1, "root", "root", 100, "password"),
+	(2, "big", "man", 1, "pass"),
+	(3, "small", "man", 2, "forrealstho"),
+	(4, "giraffe?", "yes", 4, "dabaus");
