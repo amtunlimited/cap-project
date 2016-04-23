@@ -88,3 +88,14 @@ def updateEmployeePassword(employeeID, password):
 #create new TimeSheet event
 def addTimeSheetEvent(employeeID, timeStamp, eventType):
 	db.insert('TimeSheet', EmployeeID=employeeID, TimeStamp=timeStamp, Type=eventType)
+	
+#get setting with given settingID, returning None if not found
+def getSetting(settingID):
+	try:
+		return db.select('Setting', where='SettingID=$settingID', vars=locals())[0]
+	except IndexError:
+		return None
+
+#set the value for the setting with the given settingID
+def updateSettingValue(settingID, settingValue):
+	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
