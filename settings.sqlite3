@@ -1,0 +1,2 @@
+INSERT INTO Setting (SettingID, SettingValue) VALUES
+	("salesTax", "0.06");
