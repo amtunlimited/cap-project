@@ -3,8 +3,8 @@
 		<title>Inventory</title>
 	</head>
 	<body>	
-		<input id="itemList" autofocus placeholder="Enter an Item" style='width:79%;'>
-		<button id="search" style='width:10%;' onclick="Search()">Search</button>
+		<input id="searchBar" autofocus placeholder="Enter an Item" style='width:79%;'>
+		<button id="search" style='width:10%;' onclick="search()">Search</button>
 		<button id="newItem" style='width:10%;' onclick="newItem()">Add New</button>
 		
 		<br><br>
@@ -23,27 +23,40 @@
 		</table>
 		
 		<script>
-			var items = [];
+			var itemList = [];
 			var jsonItemReq = new XMLHttpRequest();
 			var changed = false;
+			var searched = false;
 			
-			jsonItemReq.onreadystatechange = function() {
-				if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
-					var item = JSON.parse(jsonItemReq.responseText);
-					
-					for(var x = 0; x < item.length; x++){
-						items.push(item[x]);
+			getAllItems();
+			
+			function getAllItems(){
+				jsonItemReq.onreadystatechange = function() {
+					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+						var item = JSON.parse(jsonItemReq.responseText);
+						
+						itemList = [];
+						
+						for(var x = 0; x < item.length; x++){
+							itemList.push(item[x]);
+						}
+						
+						if(!searched){
+							updateTable(itemList);
+						}
 					}
-					
-					updateTable();
 				}
+				
+				jsonItemReq.open("POST", "/item/", true);
+				jsonItemReq.send(-1);
 			}
 			
-			jsonItemReq.open("POST", "/item/", true);
-			jsonItemReq.send(-1);
-			
-			function updateTable(){
+			function updateTable(items){
 				var table = document.getElementById("inventory");
+				
+				for(i = table.rows.length - 1; i > 0; i--){
+					table.deleteRow(i);
+				}
 				
 				for(x = 0; x < items.length; x++){
 					
@@ -78,7 +91,28 @@
 			}
 			
 			function search(){
+				var results = [];
+				var str = document.getElementById("searchBar").value;
+				var productNum;
+				var description;
 				
+				if(str === ""){
+					searched = false;
+					getAllItems();
+				}else{
+					for(x=0; x < itemList.length; x++){
+						productNum = itemList[x].ProductNumber + "";
+						description = itemList[x].Description;
+						
+						if(productNum.indexOf(str) != -1 || description.search(str) != -1){
+							results.push(itemList[x]);
+						}
+					}
+					
+					updateTable(results);
+					
+					searched = true;
+				}
 			}
 			
 			function updateDescription(t){
@@ -92,6 +126,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -113,6 +148,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -134,6 +170,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -155,6 +192,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -176,6 +214,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -194,6 +233,7 @@
 				var jsonItemReq = new XMLHttpRequest();
 					jsonItemReq.onreadystatechange = function() {
 						if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+							getAllItems();
 						}
 					}
 				
@@ -214,6 +254,7 @@
 					var jsonItemReq = new XMLHttpRequest();
 						jsonItemReq.onreadystatechange = function() {
 							if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+								getAllItems();
 							}
 						}
 					
@@ -229,14 +270,12 @@
 				
 				jsonItemReq.onreadystatechange = function() {
 					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+						getAllItems();
 					}
 				}
 				
 				jsonItemReq.open("POST", "/addItem/", true);
 				jsonItemReq.send();
-				
-				//Reload the page
-				location.reload();
 			}
 		</script>
 	</body>
