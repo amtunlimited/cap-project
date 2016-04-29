@@ -1,2 +1,5 @@
 INSERT INTO Setting (SettingID, SettingValue) VALUES
-	("salesTax", "0.06");
+	("Sales Tax Rate", "[Insert Sales Tax Rate]"),
+	("Name", "[Insert Company Name]"),
+	("Address", "[Insert Company Address]"),
+	("Phone Number", "[Insert Company Phone Number]");
