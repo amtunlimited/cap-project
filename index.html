@@ -3,8 +3,10 @@
 		<title>Register</title>
 	</head>
 	<body>	
-		<input id="itemList" autofocus placeholder="Enter an Item" style='width:89%;'>
-		<button id="add" style='width:10%;' onclick="addToOrder()">Add Item</button>
+		<form onsubmit="addToOrder(); return false:">
+			<input id="itemList" autofocus placeholder="Enter an Item" style='width:89%;' />
+			<input type="submit" id="add" style='width:10%;' value="Add Item" />
+		</form>
 		
 		<br><br>
 		
@@ -21,7 +23,7 @@
 		<br><br>
 		<table style="width:99%">
 			<tr>
-				<td><button>Cash</button> &nbsp&nbsp <button>Credit Card</button> &nbsp&nbsp <button>Check</button></td>
+				<td><button onclick="getReceipt()">Cash</button> &nbsp&nbsp <button>Credit Card</button> &nbsp&nbsp <button>Check</button></td>
 				<td><label>Discount&nbsp: &nbsp <input id="discount" value="0.0" pattern="[0-9]*" onblur="updateTotal()"></label></td>
 			</tr>
 			
@@ -180,6 +182,10 @@
 					
 					updateTotal();
 				}
+			}
+
+			function getReceipt() {
+				console.log(JSON.stringify(items));	
 			}
 		</script>
 	</body>
