@@ -65,10 +65,6 @@
 				items.splice(row.rowIndex - 1, 1);
 				document.getElementById("saleItems").deleteRow(row.rowIndex);
 				
-				for(x = 0; x < items.length; x++){
-					console.log(items[x].ProductNumber);
-				}
-				
 				updateTotal();
 			}
 			
