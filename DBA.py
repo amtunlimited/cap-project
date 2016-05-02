@@ -55,8 +55,8 @@ def incrementCount(productNumber, delta):
 	)
 
 #add a new user
-def addEmployee(employeeID, firstName, lastName, role):
-	db.insert('Employee', EmployeeID = employeeID, FirstName = firstName, LastName = lastName, Role = role)
+def addEmployee(employeeID, firstName, lastName, role, hourlyPay):
+	db.insert('Employee', EmployeeID = employeeID, FirstName = firstName, LastName = lastName, Role = role, HourlyPay = hourlyPay)
 
 #get the employee with the given ID, returning None if not found	
 def getEmployee(employeeID):
@@ -85,6 +85,10 @@ def updateEmployeeRole(employeeID, role):
 def updateEmployeePassword(employeeID, password):
 	db.update('Employee', where='EmployeeID=$employeeID', vars=locals(), Password=password)
 
+#update HourlyPay for Employee
+def updateEmployeeHourlyPay(employeeId, hourlyPay):
+	db.update('Employee', where='EmployeeID=$employeeID', vars=locals(), HourlyPay=hourlyPay)
+
 #create new TimeSheet event
 def addTimeSheetEvent(employeeID, timeStamp, eventType):
 	db.insert('TimeSheet', EmployeeID=employeeID, TimeStamp=timeStamp, Type=eventType)
@@ -100,8 +104,27 @@ def getSetting(settingID):
 def updateSettingValue(settingID, settingValue):
 	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
 
+#add new Purchase into Purchase table
 def addPurchase(EmployeeID, PaymentMethod):
 	return db.insert('Purchase', EmployeeID=EmployeeID, PaymentMethod=PaymentMethod)
 
+#add new PurchaseItem
 def addPurchaseItem(PurchaseNumber, ProductNumber, Count):
 	return db.insert('PurchaseItem', PurchaseNumber=PurchaseNumber, ProductNumber=ProductNumber, Count=Count)
+	
+#Return items where Count <= Threshold
+def thresholdReport():
+	return db.select('Inventory', where='Count <= Threshold')
+
+#Get all purchases from Purchase table
+def getAllPurchases():
+	return db.select('Purchase', order = 'PurchaseNumber')
+
+#Get all purchases that took place between beginTime and endTime
+def getPurchasesBetween(beginTime, endTime):
+	return db.select('Purchase', where='TimeStamp > $beginTime AND TimeStamp < $endTime', order = 'PurchaseNumber')
+
+#Get all items purchased in the transaction with given purchaseNumber
+def getPurchaseItems(purchaseNumber):
+	return db.select('PurchaseItem', where= 'PurchaseNumber = $purchaseNumber', order = 'PurchaseLineID', vars=locals())
+	
