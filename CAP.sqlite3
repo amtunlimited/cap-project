@@ -3,6 +3,7 @@ CREATE TABLE Employee (
 	FirstName TEXT NOT NULL,
 	LastName TEXT NOT NULL,
 	Role INTEGER NOT NULL,
+	HourlyPay FLOAT NOT NULL,
 	Password TEXT NOT NULL
 );
 
