@@ -3,7 +3,7 @@
 		<title>Register</title>
 	</head>
 	<body>	
-		<form onsubmit="addToOrder(); return false:">
+		<form onsubmit="addToOrder(); return false;">
 			<input id="itemList" autofocus placeholder="Enter an Item" style='width:89%;' />
 			<input type="submit" id="add" style='width:10%;' value="Add Item" />
 		</form>
@@ -82,6 +82,8 @@
 				for(x = 1; x < rows.length; x++){
 					subtotal += parseFloat(rows[x].cells[4].children[0].value);
 					tax += parseFloat(rows[x].cells[4].children[0].value) * (taxRate * parseFloat(items[x-1].Taxable));
+					items[x-1].Count = parseFloat(rows[x].cells[3].children[0].value)
+					//items[x-1].things = parseFloat(rows[x].cells[3].children[0].value)
 				}
 				
 				subtotal -= parseFloat(document.getElementById("discount").value);
@@ -181,7 +183,24 @@
 			}
 
 			function getReceipt() {
-				console.log(JSON.stringify(items));	
+				var receipt = new Object();
+				receipt.cart = items;
+				receipt.tax = taxRate;
+				receipt.discount = parseFloat(document.getElementById("discount").value);
+				receipt.method = "Cash";
+
+				console.log(JSON.stringify(receipt));
+				var jsonItemReq = new XMLHttpRequest();
+                    jsonItemReq.onreadystatechange = function() {
+					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+						var checkout = jsonItemReq.responseText;
+						console.log(checkout);
+						window.open("data:text/plain,"+escape(checkout), "Receipt", "menubar=no,toolbar=no");
+					}
+				}
+				jsonItemReq.open("POST", "/checkout/", true);
+				jsonItemReq.send(JSON.stringify(receipt));
+
 			}
 		</script>
 	</body>

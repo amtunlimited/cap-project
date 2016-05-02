@@ -99,3 +99,9 @@ def getSetting(settingID):
 #set the value for the setting with the given settingID
 def updateSettingValue(settingID, settingValue):
 	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
+
+def addPurchase(EmployeeID, PaymentMethod):
+	return db.insert('Purchase', EmployeeID=EmployeeID, PaymentMethod=PaymentMethod)
+
+def addPurchaseItem(PurchaseNumber, ProductNumber, Count):
+	return db.insert('PurchaseItem', PurchaseNumber=PurchaseNumber, ProductNumber=ProductNumber, Count=Count)

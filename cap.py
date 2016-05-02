@@ -21,6 +21,7 @@ urls = (
 	'/updateTax/', 'updateTax',
 	'/deleteItem/', 'deleteItem',
 	'/addItem/', 'addItem',
+	'/checkout/', 'checkout',
 )
 
 app = web.application(urls, globals())
@@ -131,8 +132,35 @@ class logout:
 		#session.kill()
 		DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockOut")
 		session.user=0
-		session.role=1
+		session.role=0
 		raise web.seeother('/login/')
+
+class checkout:
+	def POST(self):
+		loggedIn(1)
+		receipt = json.loads(web.data())
+		cart = receipt["cart"]
+
+		web.header('Content-type', 'text/plain')
+		output = ""
+
+		#output += DBA.getSetting("Name") + "\n"
+
+		total = 0
+		tax = 0
+		taxrate = receipt["tax"]
+		purchaseNum = DBA.addPurchase(session.user, receipt["method"])
+		for item in cart:
+			DBA.addPurchaseItem(purchaseNum, item["ProductNumber"], item["Count"])
+			DBA.incrementCount(item["ProductNumber"], -1*item["Count"])
+			output += "{}X{}\n\t{}\n\n".format(item["Description"], item["Count"], item["Price"])
+			total += item["Price"] * item["Count"]
+			tax += item["Price"] * item["Count"] * taxrate
+
+		output += "Subtotal:\t{}\nTax:\t{}\nDiscount:\t{}\n\nTotal\t{}".format(total, tax, receipt["discount"],  total+tax-receipt["discount"])
+
+		return output
+
 
 if __name__ == "__main__":
 	app.run()
