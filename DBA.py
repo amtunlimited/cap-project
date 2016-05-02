@@ -55,8 +55,8 @@ def incrementCount(productNumber, delta):
 	)
 
 #add a new user
-def addEmployee(employeeID, firstName, lastName, role, hourlyPay):
-	db.insert('Employee', EmployeeID = employeeID, FirstName = firstName, LastName = lastName, Role = role, HourlyPay = hourlyPay)
+def addEmployee(employeeID, firstName, lastName, role, password, hourlyPay):
+	db.insert('Employee', EmployeeID = employeeID, FirstName = firstName, LastName = lastName, Role = role, Password = password, HourlyPay = hourlyPay)
 
 #get the employee with the given ID, returning None if not found	
 def getEmployee(employeeID):
