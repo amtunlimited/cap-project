@@ -18,6 +18,7 @@ CREATE TABLE Purchase (
 	PurchaseNumber INTEGER NOT NULL PRIMARY KEY,
 	EmployeeID INTEGER NOT NULL,
 	PaymentMethod TEXT NOT NULL,
+	TimeStamp INTEGER NOT NULL, --Unix time
 	FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
