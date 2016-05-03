@@ -42,6 +42,7 @@ urls = (
 	'/getTimeSheetEventsBetween/', 'getTimeSheetEventsBetween',
 	'/threshold/', 'threshold',
 	'/getThresholdReport/', 'getThresholdReport',
+	'/getAllSettings/', 'getAllSettings',
 )
 
 app = web.application(urls, globals())
@@ -251,9 +252,16 @@ class settings:
 		#return index()
 		return render.settings()
 
-class getSetting:
+class getAllSettings:
 	def POST(self):
 		ops = json.loads(web.data())
+		
+		web.header('Content-Type', 'application/json')
+		return json.dumps(list(DBA.getAllSettings()))
+
+class getSetting:
+	def POST(self):
+		#ops = json.loads(web.data())
 		
 		web.header('Content-Type', 'application/json')
 		return json.dumps(DBA.getSetting(web.data()))
@@ -261,7 +269,7 @@ class getSetting:
 class updateSettingValue:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		list = str.split(',', 1)
 		
 		DBA.updateSettingValue(list[0], list[1])
 
@@ -290,7 +298,7 @@ class getPurchaseItems:
 		ops = json.loads(web.data())
 		
 		web.header('Content-Type', 'application/json')
-		return json.dumps(DBA.getPurchaseItems(web.data()))
+		return json.dumps(list(DBA.getPurchaseItems(web.data())))
 
 class getPurchasesBetween:
 	def POST(self):

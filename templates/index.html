@@ -41,7 +41,19 @@
 <script>
 	var changed = false;
 	var items = [];
-	var taxRate = 0.06;
+	var taxRate = 0;
+	
+	var jsonItemReq = new XMLHttpRequest();
+	jsonItemReq.onreadystatechange = function() {
+		if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+			var item = JSON.parse(jsonItemReq.responseText);
+			
+			taxRate = parseFloat(item.SettingValue);
+		}
+	}
+		
+	jsonItemReq.open("POST", "/getSetting/", true);
+	jsonItemReq.send("Sales Tax Rate");
 	
 	//Adds the item currently displayed in itemList to the saleItems table
 	function addToOrder(){
@@ -78,7 +90,6 @@
 			subtotal += parseFloat(rows[x].cells[4].children[0].value);
 			tax += parseFloat(rows[x].cells[4].children[0].value) * (taxRate * parseFloat(items[x-1].Taxable));
 			items[x-1].Count = parseFloat(rows[x].cells[3].children[0].value)
-			//items[x-1].things = parseFloat(rows[x].cells[3].children[0].value)
 		}
 		
 		subtotal -= parseFloat(document.getElementById("discount").value);

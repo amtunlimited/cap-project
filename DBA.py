@@ -108,6 +108,10 @@ def getSetting(settingID):
 	except IndexError:
 		return None
 
+#Get all settings from setting table
+def getAllSettings():
+	return db.select('Setting', order = 'SettingID')
+
 #set the value for the setting with the given settingID
 def updateSettingValue(settingID, settingValue):
 	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
