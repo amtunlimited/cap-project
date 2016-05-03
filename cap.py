@@ -47,8 +47,8 @@ urls = (
 )
 
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 0, 'role':0})
-render = web.template.render('templates', base='base')
+session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user':0, 'role':0, 'name':""})
+render = web.template.render('templates', base='base', globals={'session': session})
 
 def loggedIn(role):
 	if(session.user == 0 or session.role < role):
@@ -149,6 +149,7 @@ class login:
 		else:
 			session.user=emp.EmployeeID
 			session.role=emp.Role
+			session.name=emp.FirstName
 			session.loginTime = datetime.datetime.now()
 			DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockIn")
 			raise web.seeother('/')
@@ -159,6 +160,7 @@ class logout:
 		DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockOut")
 		session.user=0
 		session.role=0
+		session.name=""
 		raise web.seeother('/login/')
 
 class checkout:

@@ -5,7 +5,6 @@ $def with (code)
 		<title>CAP Retail Management System</title>
 		<style>
 			body {
-				background: #EEEEEE;
 				font-family: sans-serif
 			}
 
@@ -44,14 +43,24 @@ $def with (code)
 
 	<body>
 		<div class="container">
+			$if session.name != "":
+				Hello <b>$session.name:</b> <a href="/logout/">Logout</a>
 			<div class="navbar">
-				<a href="/login/">Login</a>
-				<a href="/">Register</a>
-				<a href="/inventory/">Inventory</a>
+				<!--<a href="/login/">Login</a>-->
+				$if session.role < 1:
+					<a href="/login/">Login</a>
+				$else:
+					<a href="/">Register</a>
+					$if session.role > 1:
+						<a href="/inventory/">Inventory</a>
+						<a href="/payroll/">Payroll</a>
+						<a href="/purchases/">Purchases</a>
+						<a href="/threshold/">Threshold</a>
+						<a href="/settings/">Settings</a>
 				<!--<div class="spacer"></div>-->
-				<a href="/logout/">Logout</a>
 			</div>
 			
+
 			<div class="content">
 				$:code	
 			</div>
