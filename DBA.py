@@ -86,7 +86,7 @@ def updateEmployeePassword(employeeID, password):
 	db.update('Employee', where='EmployeeID=$employeeID', vars=locals(), Password=password)
 
 #update HourlyPay for Employee
-def updateEmployeeHourlyPay(employeeId, hourlyPay):
+def updateEmployeeHourlyPay(employeeID, hourlyPay):
 	db.update('Employee', where='EmployeeID=$employeeID', vars=locals(), HourlyPay=hourlyPay)
 
 #create new TimeSheet event

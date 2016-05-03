@@ -216,30 +216,30 @@ class getEmployee:
 class updateName:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		list = str.split(' ', 2)
 		
-		DBA.updateName(list[0], list[1])
+		DBA.updateEmployeeName(list[0], list[1], list[2])
 
 class updateRole:
 	def POST(self):
 		str = web.data()
 		list = str.split(' ', 1)
 		
-		DBA.updateRole(list[0], list[1])
+		DBA.updateEmployeeRole(list[0], list[1])
 
 class updatePassword:
 	def POST(self):
 		str = web.data()
 		list = str.split(' ', 1)
 		
-		DBA.updatePassword(list[0], list[1])
+		DBA.updateEmployeePassword(list[0], list[1])
 
 class updateHourlyPay:
 	def POST(self):
 		str = web.data()
 		list = str.split(' ', 1)
 		
-		DBA.updateHourlyPay(list[0], list[1])
+		DBA.updateEmployeeHourlyPay(list[0], list[1])
 
 class settings:
 	def GET(self):
@@ -334,7 +334,7 @@ class threshold:
 class getThresholdReport:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
-		return json.dumps(DBA.getThresholdReport())
+		return json.dumps(list(DBA.thresholdReport()))
 
 if __name__ == "__main__":
 	app.run()

@@ -17,7 +17,7 @@
 </table>
 
 <script>
-	var EmployeeList = [];
+	var employeeList = [];
 	var jsonItemReq = new XMLHttpRequest();
 	var changed = false;
 	var searched = false;
@@ -29,14 +29,14 @@
 			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
 				var item = JSON.parse(jsonItemReq.responseText);
 				
-				EmployeeList = [];
+				employeeList = [];
 				
 				for(var x = 0; x < item.length; x++){
-					EmployeeList.push(item[x]);
+					employeeList.push(item[x]);
 				}
 				
 				if(!searched){
-					updateTable(EmployeeList);
+					updateTable(employeeList);
 				}
 			}
 		}
@@ -115,7 +115,7 @@
 		
 			var row = t.parentNode.parentNode;
 			var ID = row.cells[1].innerHTML;
-			var name = row.cells[2].children[0].value + row.cells[3].children[0].value;
+			var name = row.cells[2].children[0].value + " " + row.cells[3].children[0].value;
 			
 			var jsonItemReq = new XMLHttpRequest();
 				jsonItemReq.onreadystatechange = function() {
@@ -137,7 +137,7 @@
 		
 			var row = t.parentNode.parentNode;
 			var itemNumber = row.cells[1].innerHTML;
-			var description = row.cells[3].children[0].value;
+			var description = row.cells[5].children[0].value;
 			
 			var jsonItemReq = new XMLHttpRequest();
 				jsonItemReq.onreadystatechange = function() {
@@ -159,7 +159,7 @@
 		
 			var row = t.parentNode.parentNode;
 			var itemNumber = row.cells[1].innerHTML;
-			var description = row.cells[4].children[0].value;
+			var description = row.cells[6].children[0].value;
 			
 			var jsonItemReq = new XMLHttpRequest();
 				jsonItemReq.onreadystatechange = function() {
@@ -178,19 +178,33 @@
 	function updateRole(t){
 		var row = t.parentNode.parentNode;
 		var itemNumber = row.cells[1].innerHTML;
-		var description = row.cells[7].children[0].value;
+		var description = row.cells[4].children[0].value;
+		var otherManager = false;
 		
-		var jsonItemReq = new XMLHttpRequest();
-			jsonItemReq.onreadystatechange = function() {
-				if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
-					getAllEmployees();
-				}
+		for(x = 0; x < employeeList.length; x++){
+			if(employeeList[x].Role > 1 && employeeList[x].EmployeeID != itemNumber){
+				otherManager = true;
+				break;
 			}
+		}
 		
-		var str = itemNumber + " " + description;
-		
-		jsonItemReq.open("POST", "/updateRole/", true);
-		jsonItemReq.send(str);
+		if(description == 1 && !otherManager){
+			alert("You must have at least one manager!");
+			
+			getAllEmployees();
+		}else{
+			var jsonItemReq = new XMLHttpRequest();
+				jsonItemReq.onreadystatechange = function() {
+					if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+						getAllEmployees();
+					}
+				}
+			
+			var str = itemNumber + " " + description;
+			
+			jsonItemReq.open("POST", "/updateRole/", true);
+			jsonItemReq.send(str);
+		}
 	}
 	
 	function change(){
