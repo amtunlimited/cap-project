@@ -26,7 +26,7 @@ urls = (
 
 app = web.application(urls, globals())
 session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 0, 'role':0})
-templates = web.template.render('templates', base='base')
+render = web.template.render('templates', base='base')
 
 def loggedIn(role):
 	if(session.user == 0 or session.role < role):
@@ -99,8 +99,9 @@ class inventory:
 		#	raise web.seeother('/login/')
 		loggedIn(2)
 
-		index = web.template.frender('inventory.html')
-		return index()
+		#index = web.template.frender('inventory.html')
+		#return index()
+		return render.inventory()
 
 class index:
 	def GET(self):
@@ -108,14 +109,15 @@ class index:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('index.html')
-		return index()
+		#index = web.template.frender('index.html')
+		#return index()
+		return render.index()
 
 class login:
 	def GET(self):
 		#login = web.template.frender('login.html')
 		#return login()
-		return templates.login()
+		return render.login()
 	
 	def POST(self):
 		inputs = web.input()

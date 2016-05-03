@@ -1,0 +1,200 @@
+<form onsubmit="addToOrder(); return false;">
+	<input id="itemList" autofocus placeholder="Enter an Item" style='width:89%;' />
+	<input type="submit" id="add" style='width:10%;' value="Add Item" />
+</form>
+
+<br><br>
+
+<table style="width:99%" id="saleItems" border="1">
+	<tr>
+		<td></td>
+		<th>Item</th>
+		<th>Description</th>
+		<th>Quantity</th>
+		<th>Price</th>
+	</tr>
+</table>
+
+<br><br>
+<table style="width:99%">
+	<tr>
+		<td><button onclick="getReceipt()">Cash</button> &nbsp&nbsp <button>Credit Card</button> &nbsp&nbsp <button>Check</button></td>
+		<td><label>Discount&nbsp: &nbsp <input id="discount" value="0.0" pattern="[0-9]*" onblur="updateTotal()"></label></td>
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td><label>Subtotal &nbsp: &nbsp <input id="subtotal" readonly value="0.0"></label></td>
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td><label>Tax &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp <input id="tax" readonly value="0.0"></label></td>
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td><label>Total &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: &nbsp <input id="total" readonly value="0.0"></label></td>
+	</tr>
+</table>
+
+<script>
+	var changed = false;
+	var items = [];
+	var taxRate = 0.06;
+	
+	//Adds the item currently displayed in itemList to the saleItems table
+	function addToOrder(){
+		var input = document.getElementById("itemList").value;
+		document.getElementById("itemList").value = '';
+		document.getElementById("itemList").focus();
+		
+		if(input.length != 0){
+			var item = getItem(input);
+		}
+	}
+	
+	function deleteRow(t){
+		var row = t.parentNode.parentNode;
+		
+		items.splice(row.rowIndex - 1, 1);
+		document.getElementById("saleItems").deleteRow(row.rowIndex);
+		
+		updateTotal();
+	}
+	
+	function updateTotal(){
+		var discount = document.getElementById("discount");
+		
+		if(discount.value.length == 0){
+			discount.value = 0.0;
+		}
+		
+		var rows = document.getElementById("saleItems").rows;
+		var subtotal = 0;
+		var tax = 0;
+		
+		for(x = 1; x < rows.length; x++){
+			subtotal += parseFloat(rows[x].cells[4].children[0].value);
+			tax += parseFloat(rows[x].cells[4].children[0].value) * (taxRate * parseFloat(items[x-1].Taxable));
+			items[x-1].Count = parseFloat(rows[x].cells[3].children[0].value)
+			//items[x-1].things = parseFloat(rows[x].cells[3].children[0].value)
+		}
+		
+		subtotal -= parseFloat(document.getElementById("discount").value);
+		
+		document.getElementById("subtotal").value = subtotal;
+		document.getElementById("tax").value = tax;
+		document.getElementById("total").value = subtotal + tax;
+		
+		format(document.getElementById("discount"));
+		format(document.getElementById("subtotal"));
+		format(document.getElementById("tax"));
+		format(document.getElementById("total"));
+	}
+	
+	function updatePrice(t){
+		var row = t.parentNode.parentNode;
+		
+		row.cells[4].children[0].value =  row.cells[3].children[0].value * items[row.rowIndex - 1].Price;
+		
+		format(row.cells[4].children[0]);
+		
+		updateTotal();
+	}
+	
+	function updatePricePer(t){
+		var row = t.parentNode.parentNode;
+		
+		if(!changed){
+			return false;
+		}
+		
+		var price = row.cells[4].children[0].value;
+		
+		if(price < 0){
+			alert("Price cannot be negative");
+		}else{
+			items[row.rowIndex - 1].Price = price;
+		}	
+		
+		changed = false;
+		
+		updatePrice(t);
+	}
+	
+	function change(){
+		changed = true;
+	}
+	
+	function format(t){    
+		t.value = parseFloat(t.value.replace(/,/g, ""))
+					.toFixed(2)
+					.toString()
+					.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	
+	function getItem(itemNumber){
+		var jsonItemReq = new XMLHttpRequest();
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var item = JSON.parse(jsonItemReq.responseText);
+				updateTable(item);
+				return item;
+			}
+		}
+		
+		jsonItemReq.open("POST", "/item/", true);
+		jsonItemReq.send(itemNumber);
+		
+		var updateTable = function(item) {
+			
+			//grab the table from the document
+			var table = document.getElementById("saleItems");
+			
+			//add a row to the table
+			var row = table.insertRow(-1);
+			
+			//Insert new cells into the new row
+			var deleteCell = row.insertCell(0);
+			var itemCell = row.insertCell(1);
+			var descriptionCell = row.insertCell(2);
+			var quantityCell = row.insertCell(3);
+			var priceCell = row.insertCell(4);
+			
+			//input the information into the new cells
+			deleteCell.innerHTML = "<button onclick=\"deleteRow(this)\">X</button>";
+			itemCell.innerHTML = item.ProductNumber;
+			descriptionCell.innerHTML = item.Description;
+			quantityCell.innerHTML = "<input pattern=\"[0-9]*\" onChange=\"updatePrice(this)\" type=\"number\" value=\"1\">";
+			priceCell.innerHTML = "<input pattern=\"[0-9]*\" onChange=\"change()\" onblur=\"updatePricePer(this)\" value="+ item.Price +">";
+			
+			items.push(item);
+			
+			format(priceCell.children[0]);
+			
+			updateTotal();
+		}
+	}
+
+	function getReceipt() {
+		var receipt = new Object();
+		receipt.cart = items;
+		receipt.tax = taxRate;
+		receipt.discount = parseFloat(document.getElementById("discount").value);
+		receipt.method = "Cash";
+
+		console.log(JSON.stringify(receipt));
+		var jsonItemReq = new XMLHttpRequest();
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var checkout = jsonItemReq.responseText;
+				console.log(checkout);
+				window.open("data:text/plain,"+escape(checkout), "Receipt", "menubar=no,toolbar=no");
+			}
+		}
+		jsonItemReq.open("POST", "/checkout/", true);
+		jsonItemReq.send(JSON.stringify(receipt));
+
+	}
+</script>
