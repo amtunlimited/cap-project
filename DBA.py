@@ -105,16 +105,20 @@ def updateSettingValue(settingID, settingValue):
 	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
 
 #add new Purchase into Purchase table
-def addPurchase(EmployeeID, PaymentMethod):
-	return db.insert('Purchase', EmployeeID=EmployeeID, PaymentMethod=PaymentMethod)
+def addPurchase(employeeID, paymentMethod, discount):
+	return db.insert('Purchase', EmployeeID=employeeID, PaymentMethod=paymentMethod, Discount=discount)
 
 #add new PurchaseItem
-def addPurchaseItem(PurchaseNumber, ProductNumber, Count):
-	return db.insert('PurchaseItem', PurchaseNumber=PurchaseNumber, ProductNumber=ProductNumber, Count=Count)
+def addPurchaseItem(purchaseNumber, productNumber, count, price):
+	return db.insert('PurchaseItem', PurchaseNumber=purchaseNumber, ProductNumber=productNumber, Count=count, Price=price)
 	
 #Return items where Count <= Threshold
 def thresholdReport():
 	return db.select('Inventory', where='Count <= Threshold')
+
+#Get purchase with given PurchaseNumber
+def getPurchase(purchaseNumber):
+	return db.select('Purchase', where='PurchaseNumber=$purchaseNumber')
 
 #Get all purchases from Purchase table
 def getAllPurchases():
