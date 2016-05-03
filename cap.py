@@ -4,6 +4,7 @@ import web
 import json
 import DBA
 import datetime
+import time
 
 web.config.debug = False
 
@@ -174,13 +175,13 @@ class checkout:
 		total = 0
 		tax = 0
 		taxrate = receipt["tax"]
-		purchaseNum = DBA.addPurchase(session.user, receipt["method"])
+		purchaseNum = DBA.addPurchase(session.user, receipt["method"], receipt["discount"], int(time.time()))
 		for item in cart:
-			DBA.addPurchaseItem(purchaseNum, item["ProductNumber"], item["Count"])
+			DBA.addPurchaseItem(purchaseNum, item["ProductNumber"], item["Count"], item["Price"])
 			DBA.incrementCount(item["ProductNumber"], -1*item["Count"])
 			output += "{}X{}\n\t{}\n\n".format(item["Description"], item["Count"], item["Price"])
-			total += item["Price"] * item["Count"]
-			tax += item["Price"] * item["Count"] * taxrate
+			total += float(item["Price"]) * float(item["Count"])
+			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate)
 
 		output += "Subtotal:\t{}\nTax:\t{}\nDiscount:\t{}\n\nTotal\t{}".format(total, tax, receipt["discount"],  total+tax-receipt["discount"])
 

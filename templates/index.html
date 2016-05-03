@@ -18,7 +18,7 @@
 <br><br>
 <table style="width:99%">
 	<tr>
-		<td><button onclick="getReceipt()">Cash</button> &nbsp&nbsp <button>Credit Card</button> &nbsp&nbsp <button>Check</button></td>
+		<td><button onclick="getReceipt('Cash')">Cash</button> &nbsp&nbsp <button onclick="getReceipt('Credit Card')">Credit Card</button> &nbsp&nbsp <button onclick="getReceipt('Check')">Check</button></td>
 		<td><label>Discount&nbsp: &nbsp <input id="discount" value="0.0" pattern="[0-9]*" onblur="updateTotal()"></label></td>
 	</tr>
 	
@@ -188,12 +188,12 @@
 		}
 	}
 
-	function getReceipt() {
+	function getReceipt(method) {
 		var receipt = new Object();
 		receipt.cart = items;
 		receipt.tax = taxRate;
 		receipt.discount = parseFloat(document.getElementById("discount").value);
-		receipt.method = "Cash";
+		receipt.method = method;
 
 		console.log(JSON.stringify(receipt));
 		var jsonItemReq = new XMLHttpRequest();

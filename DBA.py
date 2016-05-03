@@ -117,8 +117,8 @@ def updateSettingValue(settingID, settingValue):
 	db.update('Setting', where='SettingID=$settingID', vars=locals(), SettingValue=settingValue)
 
 #add new Purchase into Purchase table
-def addPurchase(employeeID, paymentMethod, discount):
-	return db.insert('Purchase', EmployeeID=employeeID, PaymentMethod=paymentMethod, Discount=discount)
+def addPurchase(employeeID, paymentMethod, discount, TimeStamp):
+	return db.insert('Purchase', EmployeeID=employeeID, PaymentMethod=paymentMethod, Discount=discount, TimeStamp=TimeStamp)
 
 #add new PurchaseItem
 def addPurchaseItem(purchaseNumber, productNumber, count, price):
