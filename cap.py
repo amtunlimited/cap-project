@@ -26,6 +26,7 @@ urls = (
 
 app = web.application(urls, globals())
 session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 0, 'role':0})
+templates = web.template.render('templates', base='base')
 
 def loggedIn(role):
 	if(session.user == 0 or session.role < role):
@@ -112,8 +113,9 @@ class index:
 
 class login:
 	def GET(self):
-		login = web.template.frender('login.html')
-		return login()
+		#login = web.template.frender('login.html')
+		#return login()
+		return templates.login()
 	
 	def POST(self):
 		inputs = web.input()
