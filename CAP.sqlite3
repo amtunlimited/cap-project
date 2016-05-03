@@ -3,7 +3,7 @@ CREATE TABLE Employee (
 	FirstName TEXT NOT NULL,
 	LastName TEXT NOT NULL,
 	Role INTEGER NOT NULL,
-	HourlyPay FLOAT NOT NULL,
+	HourlyPay REAL NOT NULL,
 	Password TEXT NOT NULL
 );
 
@@ -20,6 +20,7 @@ CREATE TABLE Purchase (
 	EmployeeID INTEGER NOT NULL,
 	PaymentMethod TEXT NOT NULL,
 	TimeStamp INTEGER NOT NULL, --Unix time
+	Discount REAL NOT NULL,
 	FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
@@ -38,6 +39,7 @@ CREATE TABLE PurchaseItem (
 	PurchaseNumber INTEGER NOT NULL,
 	ProductNumber INTEGER NOT NULL,
 	Count INTEGER NOT NULL,
+	Price REAL NOT NULL,
 	FOREIGN KEY(PurchaseNumber) REFERENCES Purchase(PurchaseNumber),
 	FOREIGN KEY(ProductNumber) REFERENCES Inventory(ProductNumber)
 );
