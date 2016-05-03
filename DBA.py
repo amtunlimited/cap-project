@@ -55,8 +55,8 @@ def incrementCount(productNumber, delta):
 	)
 
 #add a new user
-def addEmployee(employeeID, firstName, lastName, role, password, hourlyPay):
-	db.insert('Employee', EmployeeID = employeeID, FirstName = firstName, LastName = lastName, Role = role, Password = password, HourlyPay = hourlyPay)
+def addEmployee(firstName, lastName, role, password, hourlyPay):
+	db.insert('Employee', FirstName = firstName, LastName = lastName, Role = role, Password = password, HourlyPay = hourlyPay)
 
 #get the employee with the given ID, returning None if not found	
 def getEmployee(employeeID):
@@ -92,7 +92,15 @@ def updateEmployeeHourlyPay(employeeId, hourlyPay):
 #create new TimeSheet event
 def addTimeSheetEvent(employeeID, timeStamp, eventType):
 	db.insert('TimeSheet', EmployeeID=employeeID, TimeStamp=timeStamp, Type=eventType)
-	
+
+#Get all TimeSheetEvents from TimeSheet table
+def getAllTimeSheetEvents():
+	return db.select('TimeSheet', order = 'EventID')
+
+#Get all TimeSheetEvents that took place between beginTime and endTime
+def getTimeSheetEventsBetween(beginTime, endTime):
+	return db.select('TimeSheet', where='TimeStamp > $beginTime AND TimeStamp < $endTime', order = 'EventID')
+
 #get setting with given settingID, returning None if not found
 def getSetting(settingID):
 	try:

@@ -22,6 +22,26 @@ urls = (
 	'/deleteItem/', 'deleteItem',
 	'/addItem/', 'addItem',
 	'/checkout/', 'checkout',
+	'/employees/', 'employees',
+	'/updateName/', 'updateName',
+	'/updateRole/', 'updateRole',
+	'/updatePassword/', 'updatePassword',
+	'/updateHourlyPay/', 'updateHourlyPay',
+	'/getEmployee/', 'getEmployee',
+	'/deleteEmployee/', 'deleteEmployee',
+	'/addEmployee/', 'addEmployee',
+	'/settings/', 'settings',
+	'/updateSettingValue/', 'updateSettingValue',
+	'/getSetting/', 'getSetting',
+	'/purchases/', 'purchases',
+	'/getPurchase/', 'getPurchase',
+	'/getPurchaseItems/', 'getPurchaseItems',
+	'/getPurchasesBetween/', 'getPurchasesBetween',
+	'/payroll/', 'payroll',
+	'/getTimeSheetEvents/', 'getTimeSheetEvents',
+	'/getTimeSheetEventsBetween/', 'getTimeSheetEventsBetween',
+	'/threshold/', 'threshold',
+	'/getThresholdReport/', 'getThresholdReport',
 )
 
 app = web.application(urls, globals())
@@ -165,6 +185,151 @@ class checkout:
 
 		return output
 
+class employees:
+	def GET(self):
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
+
+		index = web.template.frender('employees.html')
+		return index()
+
+class deleteEmployee:
+	def POST(self):
+		DBA.removeEmployee(web.data())
+
+class addEmployee:
+	def POST(self):
+		DBA.addEmployee("", "", 1, "", 0.00)
+
+class getEmployee:
+	def POST(self):
+		ops = json.loads(web.data())
+		if web.data() == "-1":
+			web.header('Content-Type', 'application/json')
+			return json.dumps(list(DBA.getAllEmployees()))
+		else:
+			web.header('Content-Type', 'application/json')
+			return json.dumps(DBA.getEmployee(web.data()))
+
+class updateName:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.updateName(list[0], list[1])
+
+class updateRole:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.updateRole(list[0], list[1])
+
+class updatePassword:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.updatePassword(list[0], list[1])
+
+class updateHourlyPay:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.updateHourlyPay(list[0], list[1])
+
+class settings:
+	def GET(self):
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
+
+		index = web.template.frender('settings.html')
+		return index()
+
+class getSetting:
+	def POST(self):
+		ops = json.loads(web.data())
+		
+		web.header('Content-Type', 'application/json')
+		return json.dumps(DBA.getSetting(web.data()))
+
+class updateSettingValue:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.updateSettingValue(list[0], list[1])
+
+class purchases:
+	def GET(self):
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
+
+		index = web.template.frender('purchases.html')
+		return index()
+
+class getPurchase:
+	def POST(self):
+		ops = json.loads(web.data())
+		if web.data() == "-1":
+			web.header('Content-Type', 'application/json')
+			return json.dumps(list(DBA.getAllPurchases()))
+		else:
+			web.header('Content-Type', 'application/json')
+			return json.dumps(DBA.getPurchase(web.data()))
+
+class getPurchaseItems:
+	def POST(self):
+		ops = json.loads(web.data())
+		
+		web.header('Content-Type', 'application/json')
+		return json.dumps(DBA.getPurchaseItems(web.data()))
+
+class getPurchasesBetween:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.getPurchasesBetween(list[0], list[1])
+
+class payroll:
+	def GET(self):
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
+
+		index = web.template.frender('payroll.html')
+		return index()
+
+class getTimeSheetEvents:
+	def POST(self):
+		web.header('Content-Type', 'application/json')
+		return json.dumps(DBA.getTimeSheetEvents())
+
+class getTimeSheetEventsBetween:
+	def POST(self):
+		str = web.data()
+		list = str.split(' ', 1)
+		
+		DBA.getTimeSheetEventsBetween(list[0], list[1])
+
+class threshold:
+	def GET(self):
+		#if(session.user!=1):
+		#	raise web.seeother('/login/')
+		loggedIn(1)
+
+		index = web.template.frender('threshold.html')
+		return index()
+
+class getThresholdReport:
+	def POST(self):
+		web.header('Content-Type', 'application/json')
+		return json.dumps(DBA.getThresholdReport())
 
 if __name__ == "__main__":
 	app.run()
