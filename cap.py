@@ -191,8 +191,9 @@ class employees:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('employees.html')
-		return index()
+		#index = web.template.frender('employees.html')
+		#return index()
+		return render.employees()
 
 class deleteEmployee:
 	def POST(self):
@@ -246,8 +247,9 @@ class settings:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('settings.html')
-		return index()
+		#index = web.template.frender('settings.html')
+		#return index()
+		return render.settings()
 
 class getSetting:
 	def POST(self):
@@ -269,8 +271,9 @@ class purchases:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('purchases.html')
-		return index()
+		#index = web.template.frender('purchases.html')
+		#return index()
+		return render.purchases()
 
 class getPurchase:
 	def POST(self):
@@ -302,8 +305,9 @@ class payroll:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('payroll.html')
-		return index()
+		#index = web.template.frender('payroll.html')
+		#return index()
+		return render.payroll()
 
 class getTimeSheetEvents:
 	def POST(self):
@@ -323,8 +327,9 @@ class threshold:
 		#	raise web.seeother('/login/')
 		loggedIn(1)
 
-		index = web.template.frender('threshold.html')
-		return index()
+		#index = web.template.frender('threshold.html')
+		#return index()
+		return render.threshold()
 
 class getThresholdReport:
 	def POST(self):
