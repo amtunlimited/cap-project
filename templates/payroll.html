@@ -1,4 +1,4 @@
-<table style="width:99%" id="dates" border="0">
+<!--<table style="width:99%" id="dates" border="0">
 	<tr>
 		<td>Start Date: <input type="date" id="startDate" onblur="dateRange()"> </td>
 		<td>End Date: <input type="date" id="endDate" onblur="dateRange()"> </td>
@@ -6,7 +6,7 @@
 </table>
 
 <br><br>
-
+-->
 <table style="width:99%" id="inventory" border="1">
 	<tr>
 		<th>Employee ID</th>
@@ -33,9 +33,7 @@
 					employeeList.push(item[x]);
 				}
 				
-				if(!searched){
-					updateTable(employeeList);
-				}
+				updateTable(employeeList);
 			}
 		}
 		
@@ -45,10 +43,6 @@
 	
 	function updateTable(items){
 		var table = document.getElementById("inventory");
-		
-		for(i = table.rows.length - 1; i > 0; i--){
-			table.deleteRow(i);
-		}
 		
 		for(x = 0; x < items.length; x++){
 			
@@ -61,35 +55,60 @@
 			var rateCell = row.insertCell(2);
 			var totalCell = row.insertCell(3);
 			
+			getHours(hoursCell, totalCell, x);
+			
 			//input the information into the new cells
 			employeeCell.innerHTML = items[x].EmployeeID;
-			rateCell.innerHTML = items[x].;
-			
+			rateCell.innerHTML = items[x].HourlyPay;
 		}
 	}
 	
-	function insertHours(hoursCell, x){
-		var total = 0;
-		
+	function getHours(hoursCell, totalCell, x){
 		var jsonReq = new XMLHttpRequest();
 		
 		jsonReq.onreadystatechange = function() {
 			if (jsonReq.readyState == 4 && jsonReq.status == 200) {
-				var item = JSON.parse(jsonReq.responseText);
+				var timestamps = JSON.parse(jsonReq.responseText);
+				var hours = 0;
+				var clockedin = false;
+				var time;
+				console.log(timestamps);
 				
-				for(var y = 0; y < item.length; y++){
-					total += parseFloat(item[y].Price);
+				for(y = 0; y < timestamps.length; y++){
+					console.log(timestamps[y]);
+					
+					if(!clockedin && timestamps[y].Type == 1){
+						console.log("clocked in now");
+						time = timestamps[y].TimeStamp;
+						clockedin = true;
+					}else if(clockedin && timestamps[y].Type == 0){
+						console.log("clocked out now");
+						clockedin = false;
+						hours += timestamps[y].TimeStamp - time;
+					}
 				}
 				
-				hoursCell.innerHTML = total;
+				hours = hours/3600;
+				
+				hoursCell.innerHTML = hours;
+				totalCell.innerHTML = hours * parseFloat(employeeList[x].HourlyPay);
+				
+				format(totalCell);
 			}
 		}
 		
-		jsonReq.open("POST", "/getPurchaseItems/", true);
-		jsonReq.send();
+		jsonReq.open("POST", "/getEmployeeTimestamps/", true);
+		jsonReq.send(employeeList[x].EmployeeID);
 	}
 	
-	function dateRange(){
+	function format(t){    
+		t.value = parseFloat(t.value.replace(/,/g, ""))
+					.toFixed(2)
+					.toString()
+					.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	
+/*	function dateRange(){
 		var start = 1;
 		var end = Date.now()/1000.0;
 		var time = start + " " + end;
@@ -116,11 +135,12 @@
 					itemList.push(item[x]);
 				}
 				
-				updateTable(itemList);
+				
 			}
 		}
 		
 		jsonItemReq.open("POST", "/getTimeSheetEventsBetween/", true);
 		jsonItemReq.send(time);
 	}
+*/
 </script>
