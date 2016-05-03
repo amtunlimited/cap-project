@@ -5,3 +5,4 @@ sessions/*
 sessions
 *.py
 webpy/PKG-INFO
+*~
