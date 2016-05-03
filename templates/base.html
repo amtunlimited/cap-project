@@ -3,9 +3,58 @@ $def with (code)
 <html>
 	<head>
 		<title>CAP Retail Management System</title>
+		<style>
+			body {
+				background: #EEEEEE;
+				font-family: sans-serif
+			}
+
+			.container {
+				width: 100%;
+				max-width: 900px;
+				margin: 50px auto;
+			}
+
+			.navbar {
+				background: #222222;
+				width: 100%;
+				height: auto;
+				padding: 1em;
+				margin: 1em 0px;
+			}
+
+			.navbar a {
+				color: #F8F8F8;
+				margin: 0 1em;
+				padding: 0;
+				position: relative;
+				text-decoration: none;
+			}
+
+			table {
+				border-collapse: collapse;
+			}
+
+			td, tr {
+				padding: 0.5em;
+			}
+
+		</style>
 	</head>
 
 	<body>
-		$:code
+		<div class="container">
+			<div class="navbar">
+				<a href="/login/">Login</a>
+				<a href="/">Register</a>
+				<a href="/inventory/">Inventory</a>
+				<!--<div class="spacer"></div>-->
+				<a href="/logout/">Logout</a>
+			</div>
+			
+			<div class="content">
+				$:code	
+			</div>
+		</div>
 	</body>
 </html>
