@@ -308,11 +308,9 @@ class getPurchaseItems:
 class getPurchasesBetween:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		dates = str.split(' ', 1)
 		
-		print(list[0] + "," + list[1])
-		
-		DBA.getPurchasesBetween(list[0], list[1])
+		return json.dumps(list(DBA.getPurchasesBetween(dates[0], dates[1])))
 
 class payroll:
 	def GET(self):

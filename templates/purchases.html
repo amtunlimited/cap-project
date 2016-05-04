@@ -140,9 +140,7 @@
 			end = Date.parse(endDate)/1000;
 		}
 		
-		time = 16215 + " " + 15654698;
-		
-		console.log(time);
+		time = start + " " + end;
 		
 		jsonItemReq.onreadystatechange = function() {
 			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {

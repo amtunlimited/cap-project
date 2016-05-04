@@ -138,7 +138,7 @@ def getAllPurchases():
 
 #Get all purchases that took place between beginTime and endTime
 def getPurchasesBetween(beginTime, endTime):
-	return db.select('Purchase', where='TimeStamp>$beginTime AND TimeStamp<$endTime', vars=locals(), order = 'PurchaseNumber')
+	return db.select('Purchase', where='TimeStamp>=$beginTime AND TimeStamp<=$endTime', vars=locals(), order = 'PurchaseNumber')
 
 #Get all items purchased in the transaction with given purchaseNumber
 def getPurchaseItems(purchaseNumber):
