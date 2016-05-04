@@ -130,7 +130,7 @@ def thresholdReport():
 
 #Get purchase with given PurchaseNumber
 def getPurchase(purchaseNumber):
-	return db.select('Purchase', where='PurchaseNumber=$purchaseNumber')
+	return db.select('Purchase', where='PurchaseNumber=$purchaseNumber', vars=locals())
 
 #Get all purchases from Purchase table
 def getAllPurchases():

@@ -61,7 +61,7 @@
 			var totalCell = row.insertCell(4);
 			
 			//input the information into the new cells
-			purchaseNumberCell.innerHTML = "<button onclick=\"\">" + items[x].PurchaseNumber + "</button>";
+			purchaseNumberCell.innerHTML = "<button onclick=\"getReceipt(" + items[x].PurchaseNumber + ")\">" + items[x].PurchaseNumber + "</button>";
 ////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
 			paymentCell.innerHTML = items[x].PaymentMethod;
@@ -113,5 +113,18 @@
 	
 	function change(){
 		changed = true;
+	}
+
+	function getReceipt(purchase) {
+		var jsonItemReq = new XMLHttpRequest();
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var checkout = jsonItemReq.responseText;
+				console.log(checkout);
+				window.open("data:text/plain,"+escape(checkout), "Receipt", "menubar=no,toolbar=no");
+			}
+		}
+		jsonItemReq.open("POST", "/receipt/", true);
+		jsonItemReq.send(purchase);	
 	}
 </script>
