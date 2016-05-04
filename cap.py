@@ -44,6 +44,8 @@ urls = (
 	'/threshold/', 'threshold',
 	'/getThresholdReport/', 'getThresholdReport',
 	'/getAllSettings/', 'getAllSettings',
+	'/stats/', 'stats',
+	'/receipt/', 'receipt',
 )
 
 app = web.application(urls, globals())
@@ -348,6 +350,35 @@ class getThresholdReport:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
 		return json.dumps(list(DBA.thresholdReport()))
+
+class stats:
+	def GET(self):
+		return render.stats()
+
+class receipt:
+	def POST(self):
+		loggedIn(1)
+		purchase = json.loads(web.data())
+		cart = DBA.getPurchaseItems(purchase)
+
+		web.header('Content-type', 'text/plain')
+		output = ""
+
+		#output += DBA.getSetting("Name") + "\n"
+
+		total = 0
+		tax = 0
+		taxrate = 0.06
+		for item in cart:
+			output += "{}X{}\n\t{}\n\n".format(DBA.getItem(item["ProductNumber"])["Description"], item["Count"], item["Price"])
+			total += float(item["Price"]) * float(item["Count"])
+			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate)
+		
+		receipt = DBA.getPurchase(purchase)[0]
+		output += "Subtotal:\t{}\nTax:\t{}\nDiscount:\t{}\n\nTotal\t{}".format(total, tax, receipt["Discount"],  total+tax-float(receipt["Discount"]))
+
+		return output
+
 
 if __name__ == "__main__":
 	app.run()
