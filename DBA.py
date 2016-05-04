@@ -99,7 +99,7 @@ def getAllTimeSheetEvents():
 
 #Get all TimeSheetEvents that took place between beginTime and endTime
 def getTimeSheetEventsBetween(beginTime, endTime):
-	return db.select('TimeSheet', where='TimeStamp > $beginTime AND TimeStamp < $endTime', order = 'EventID')
+	return db.select('TimeSheet', where='TimeStamp > $beginTime AND TimeStamp < $endTime', vars=locals(), order = 'EventID')
 
 #get setting with given settingID, returning None if not found
 def getSetting(settingID):
@@ -138,7 +138,7 @@ def getAllPurchases():
 
 #Get all purchases that took place between beginTime and endTime
 def getPurchasesBetween(beginTime, endTime):
-	return db.select('Purchase', where='TimeStamp>$beginTime AND TimeStamp<$endTime', order = 'PurchaseNumber')
+	return db.select('Purchase', where='TimeStamp>$beginTime AND TimeStamp<$endTime', vars=locals(), order = 'PurchaseNumber')
 
 #Get all items purchased in the transaction with given purchaseNumber
 def getPurchaseItems(purchaseNumber):
