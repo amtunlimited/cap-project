@@ -1,4 +1,11 @@
 <input id="searchBar" onChange="search()" onkeyup="search()" autofocus placeholder="Enter a transaction number" style='width:99%;'>
+<br><br>
+<table style="width:99%" id="dates" border="0">
+	<tr>
+		<td>Start Date: <input type="date" id="startDate" onblur="dateRange()"> </td>
+		<td>End Date: <input type="date" id="endDate" onblur="dateRange()"> </td>
+	</tr>
+</table>
 
 <br><br>
 
@@ -116,5 +123,43 @@
 	
 	function change(){
 		changed = true;
+	}
+	
+	function dateRange(){
+		var start = 1;
+		var end = Date.now()/1000;
+		var time = start + " " + end;
+		var purchases = [];
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
+		
+		if(startDate != null && startDate != ""){
+			start = Date.parse(startDate)/1000;
+		}
+		
+		if(endDate != null && endDate != ""){
+			end = Date.parse(endDate)/1000;
+		}
+		
+		time = 16215 + " " + 15654698;
+		
+		console.log(time);
+		
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var item = JSON.parse(jsonItemReq.responseText);
+				
+				purchases = [];
+				
+				for(var x = 0; x < item.length; x++){
+					purchases.push(item[x]);
+				}
+				
+				updateTable(purchases);
+			}
+		}
+		
+		jsonItemReq.open("POST", "/getPurchasesBetween/", true);
+		jsonItemReq.send(time);
 	}
 </script>

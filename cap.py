@@ -308,6 +308,8 @@ class getPurchasesBetween:
 		str = web.data()
 		list = str.split(' ', 1)
 		
+		print(list[0] + "," + list[1])
+		
 		DBA.getPurchasesBetween(list[0], list[1])
 
 class payroll:
