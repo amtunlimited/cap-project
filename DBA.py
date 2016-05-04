@@ -143,4 +143,8 @@ def getPurchasesBetween(beginTime, endTime):
 #Get all items purchased in the transaction with given purchaseNumber
 def getPurchaseItems(purchaseNumber):
 	return db.select('PurchaseItem', where= 'PurchaseNumber = $purchaseNumber', order = 'PurchaseLineID', vars=locals())
+
+#Gets all the timesheet timestamps for the given employee	
+def getEmployeeTimestamps(employeeID):
+	return db.select('TimeSheet', where= 'EmployeeID = $employeeID', vars=locals(), order = 'TimeStamp')
 	
