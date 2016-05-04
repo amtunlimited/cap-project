@@ -1,22 +1,26 @@
-<input id="searchBar" onChange="search()" onkeyup="search()" autofocus placeholder="Enter a transaction number" style='width:99%;'>
+<table style="width:99%" id="dates" border="0">
+	<tr>
+		<td>Start Date: <input type="date" id="startDate" onblur="dateRange()"> </td>
+		<td>End Date: <input type="date" id="endDate" onblur="dateRange()"> </td>
+	</tr>
+</table>
 
 <br><br>
 
 <table style="width:99%" id="inventory" border="1">
 	<tr>
-		<th>Purchase Number</th>
 		<th>Employee ID</th>
-		<th>Payment Method</th>
-		<th>Date of Purchase</th>
+		<th>Hours Worked</th>
+		<th>Hourly Rate</th>
 		<th>Total</th>
 	</tr>
 </table>
 
 <script>
 	var itemList = [];
+	var employees = [];
+	var hours = [];
 	var jsonItemReq = new XMLHttpRequest();
-	var changed = false;
-	var searched = false;
 	
 	getAllItems();
 	
@@ -31,13 +35,11 @@
 					itemList.push(item[x]);
 				}
 				
-				if(!searched){
-					updateTable(itemList);
-				}
+				updateTable(itemList);
 			}
 		}
 		
-		jsonItemReq.open("POST", "/getPurchase/", true);
+		jsonItemReq.open("POST", "/getTimeSheetEvents/", true);
 		jsonItemReq.send(-1);
 	}
 	
@@ -54,25 +56,21 @@
 			var row = table.insertRow(-1);
 			
 			//Insert new cells into the new row
-			var purchaseNumberCell = row.insertCell(0);
-			var employeeCell = row.insertCell(1);
-			var paymentCell = row.insertCell(2);
-			var dateCell = row.insertCell(3);
-			var totalCell = row.insertCell(4);
+			var employeeCell = row.insertCell(0);
+			var hoursCell = row.insertCell(1);
+			var rateCell = row.insertCell(2);
+			var totalCell = row.insertCell(3);
 			
 			//input the information into the new cells
-			purchaseNumberCell.innerHTML = "<button onclick=\"\">" + items[x].PurchaseNumber + "</button>";
-////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
-			paymentCell.innerHTML = items[x].PaymentMethod;
-			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
+			rateCell.innerHTML = items[x].;
 			
-			insertTotal(totalCell, x)
 		}
 	}
 	
-	function insertTotal(totalCell, x){
-		var total = 0 - itemList[x].Discount;
+	function insertHours(hoursCell, x){
+		var total = 0;
+		
 		var jsonReq = new XMLHttpRequest();
 		
 		jsonReq.onreadystatechange = function() {
@@ -83,38 +81,46 @@
 					total += parseFloat(item[y].Price);
 				}
 				
-				totalCell.innerHTML = total;
+				hoursCell.innerHTML = total;
 			}
 		}
 		
 		jsonReq.open("POST", "/getPurchaseItems/", true);
-		jsonReq.send(itemList[x].PurchaseNumber);
+		jsonReq.send();
 	}
 	
-	function search(){
-		var results = [];
-		var str = document.getElementById("searchBar").value;
-		var productNum;
+	function dateRange(){
+		var start = 1;
+		var end = Date.now()/1000.0;
+		var time = start + " " + end;
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
 		
-		if(str === ""){
-			searched = false;
-			getAllItems();
-		}else{
-			for(x=0; x < itemList.length; x++){
-				productNum = itemList[x].PurchaseNumber + "";
-				
-				if(productNum.indexOf(str) != -1){
-					results.push(itemList[x]);
-				}
-			}
-			
-			updateTable(results);
-			
-			searched = true;
+		if(startDate != null && startDate != ""){
+			start = (Date.parse(startDate)/1000.0) + 86400;
 		}
-	}
-	
-	function change(){
-		changed = true;
+		
+		if(endDate != null && endDate != ""){
+			end = (Date.parse(endDate)/1000.0) + 86400;
+		}
+		
+		time = start + " " + end;
+		
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var item = JSON.parse(jsonItemReq.responseText);
+				
+				itemList = [];
+				
+				for(var x = 0; x < item.length; x++){
+					itemList.push(item[x]);
+				}
+				
+				updateTable(itemList);
+			}
+		}
+		
+		jsonItemReq.open("POST", "/getTimeSheetEventsBetween/", true);
+		jsonItemReq.send(time);
 	}
 </script>

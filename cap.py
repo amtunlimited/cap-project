@@ -325,14 +325,14 @@ class payroll:
 class getTimeSheetEvents:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
-		return json.dumps(DBA.getTimeSheetEvents())
+		return json.dumps(list(DBA.getTimeSheetEvents()))
 
 class getTimeSheetEventsBetween:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		dates = str.split(' ', 1)
 		
-		DBA.getTimeSheetEventsBetween(list[0], list[1])
+		return json.dumps(list(DBA.getTimeSheetEventsBetween(dates[0], dates[1])))
 
 class threshold:
 	def GET(self):

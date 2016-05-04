@@ -73,7 +73,7 @@
 			paymentCell.innerHTML = items[x].PaymentMethod;
 			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
 			
-			insertTotal(totalCell, x)
+			insertTotal(totalCell, x);
 		}
 	}
 	
@@ -126,21 +126,20 @@
 	
 	function dateRange(){
 		var start = 1;
-		var end = Date.now()/1000;
-		var time = start + " " + end;
+		var end = Date.now()/1000.0;
 		var purchases = [];
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
 		
 		if(startDate != null && startDate != ""){
-			start = Date.parse(startDate)/1000;
+			start = (Date.parse(startDate)/1000.0) + 86400;
 		}
 		
 		if(endDate != null && endDate != ""){
-			end = Date.parse(endDate)/1000;
+			end = (Date.parse(endDate)/1000.0) + 86400;
 		}
 		
-		time = start + " " + end;
+		var time = start + " " + end;
 		
 		jsonItemReq.onreadystatechange = function() {
 			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
