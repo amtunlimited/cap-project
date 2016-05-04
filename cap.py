@@ -46,6 +46,7 @@ urls = (
 	'/getAllSettings/', 'getAllSettings',
 	'/stats/', 'stats',
 	'/receipt/', 'receipt',
+	'/getEmployeeTimestamps/', 'getEmployeeTimestamps',
 )
 
 app = web.application(urls, globals())
@@ -348,6 +349,13 @@ class getThresholdReport:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
 		return json.dumps(list(DBA.thresholdReport()))
+
+class getEmployeeTimestamps:
+	def POST(self):
+		ops = json.loads(web.data())
+		web.header('Content-Type', 'application/json')
+		return json.dumps(list(DBA.getEmployeeTimestamps(web.data())))
+		
 
 class stats:
 	def GET(self):
