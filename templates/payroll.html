@@ -17,29 +17,29 @@
 </table>
 
 <script>
-	var itemList = [];
-	var employees = [];
-	var hours = [];
+	var employeeList = [];
 	var jsonItemReq = new XMLHttpRequest();
 	
-	getAllItems();
+	getAllEmployees();
 	
-	function getAllItems(){
+	function getAllEmployees(){
 		jsonItemReq.onreadystatechange = function() {
 			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
 				var item = JSON.parse(jsonItemReq.responseText);
 				
-				itemList = [];
+				employeeList = [];
 				
 				for(var x = 0; x < item.length; x++){
-					itemList.push(item[x]);
+					employeeList.push(item[x]);
 				}
 				
-				updateTable(itemList);
+				if(!searched){
+					updateTable(employeeList);
+				}
 			}
 		}
 		
-		jsonItemReq.open("POST", "/getTimeSheetEvents/", true);
+		jsonItemReq.open("POST", "/getEmployee/", true);
 		jsonItemReq.send(-1);
 	}
 	
