@@ -71,7 +71,7 @@
 			IDCell.innerHTML = items[x].EmployeeID;
 			fNameCell.innerHTML = "<input onChange=\"change()\" onblur=\"updateName(this)\" value=\""+ items[x].FirstName +"\">";
 			lNameCell.innerHTML = "<input onChange=\"change()\" onblur=\"updateName(this)\" value=\""+ items[x].LastName +"\">";
-			passwordCell.innerHTML = "<input onChange=\"change()\" onblur=\"updatePassword(this)\" value="+ items[x].Password +">";
+			passwordCell.innerHTML = "<input type=\"password\" onChange=\"change()\" onblur=\"updatePassword(this)\" value="+ items[x].Password +">";
 			hourlyPayCell.innerHTML = "<input pattern=\"[0-9]*\" onChange=\"change()\" onblur=\"updateHourlyPay(this)\" value="+ items[x].HourlyPay +">";
 			
 			if(items[x].Role == "1"){

@@ -1,4 +1,11 @@
 <input id="searchBar" onChange="search()" onkeyup="search()" autofocus placeholder="Enter a transaction number" style='width:99%;'>
+<br><br>
+<table style="width:99%" id="dates" border="0">
+	<tr>
+		<td>Start Date: <input type="date" id="startDate" onblur="dateRange()"> </td>
+		<td>End Date: <input type="date" id="endDate" onblur="dateRange()"> </td>
+	</tr>
+</table>
 
 <br><br>
 
@@ -62,12 +69,11 @@
 			
 			//input the information into the new cells
 			purchaseNumberCell.innerHTML = "<button onclick=\"getReceipt(" + items[x].PurchaseNumber + ")\">" + items[x].PurchaseNumber + "</button>";
-////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
 			paymentCell.innerHTML = items[x].PaymentMethod;
 			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
 			
-			insertTotal(totalCell, x)
+			insertTotal(totalCell, x);
 		}
 	}
 	
@@ -116,6 +122,41 @@
 	
 	function change(){
 		changed = true;
+	}
+	
+	function dateRange(){
+		var start = 1;
+		var end = Date.now()/1000.0;
+		var purchases = [];
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
+		
+		if(startDate != null && startDate != ""){
+			start = (Date.parse(startDate)/1000.0) + 86400;
+		}
+		
+		if(endDate != null && endDate != ""){
+			end = (Date.parse(endDate)/1000.0) + 86400;
+		}
+		
+		var time = start + " " + end;
+		
+		jsonItemReq.onreadystatechange = function() {
+			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
+				var item = JSON.parse(jsonItemReq.responseText);
+				
+				purchases = [];
+				
+				for(var x = 0; x < item.length; x++){
+					purchases.push(item[x]);
+				}
+				
+				updateTable(purchases);
+			}
+		}
+		
+		jsonItemReq.open("POST", "/getPurchasesBetween/", true);
+		jsonItemReq.send(time);
 	}
 
 	function getReceipt(purchase) {

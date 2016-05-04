@@ -46,6 +46,7 @@ urls = (
 	'/getAllSettings/', 'getAllSettings',
 	'/stats/', 'stats',
 	'/receipt/', 'receipt',
+	'/getEmployeeTimestamps/', 'getEmployeeTimestamps',
 )
 
 app = web.application(urls, globals())
@@ -153,13 +154,13 @@ class login:
 			session.role=emp.Role
 			session.name=emp.FirstName
 			session.loginTime = int(time.time())
-			DBA.addTimeSheetEvent(session.user, int(time.time()), "ClockIn")
+			DBA.addTimeSheetEvent(session.user, int(time.time()), 1)
 			raise web.seeother('/')
 			
 class logout:
 	def GET(self):
 		#session.kill()
-		DBA.addTimeSheetEvent(session.user, int(time.time()), "ClockOut")
+		DBA.addTimeSheetEvent(session.user, int(time.time()), 0)
 		session.user=0
 		session.role=0
 		session.name=""
@@ -308,9 +309,9 @@ class getPurchaseItems:
 class getPurchasesBetween:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		dates = str.split(' ', 1)
 		
-		DBA.getPurchasesBetween(list[0], list[1])
+		return json.dumps(list(DBA.getPurchasesBetween(dates[0], dates[1])))
 
 class payroll:
 	def GET(self):
@@ -325,14 +326,14 @@ class payroll:
 class getTimeSheetEvents:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
-		return json.dumps(DBA.getTimeSheetEvents())
+		return json.dumps(list(DBA.getTimeSheetEvents()))
 
 class getTimeSheetEventsBetween:
 	def POST(self):
 		str = web.data()
-		list = str.split(' ', 1)
+		dates = str.split(' ', 2)
 		
-		DBA.getTimeSheetEventsBetween(list[0], list[1])
+		return json.dumps(list(DBA.getTimeSheetEventsBetween(dates[0], dates[1], dates[2])))
 
 class threshold:
 	def GET(self):
@@ -348,6 +349,13 @@ class getThresholdReport:
 	def POST(self):
 		web.header('Content-Type', 'application/json')
 		return json.dumps(list(DBA.thresholdReport()))
+
+class getEmployeeTimestamps:
+	def POST(self):
+		ops = json.loads(web.data())
+		web.header('Content-Type', 'application/json')
+		return json.dumps(list(DBA.getEmployeeTimestamps(web.data())))
+		
 
 class stats:
 	def GET(self):

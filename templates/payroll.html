@@ -1,43 +1,44 @@
-<input id="searchBar" onChange="search()" onkeyup="search()" autofocus placeholder="Enter a transaction number" style='width:99%;'>
+<table style="width:99%" id="dates" border="0">
+	<tr>
+		<td>Start Date: <input type="date" id="startDate" onblur="getAllEmployees()"> </td>
+		<td>End Date: <input type="date" id="endDate" onblur="getAllEmployees()"> </td>
+	</tr>
+</table>
 
 <br><br>
 
+<!-- Comment everything above out if the daterange doesn't work-->
 <table style="width:99%" id="inventory" border="1">
 	<tr>
-		<th>Purchase Number</th>
 		<th>Employee ID</th>
-		<th>Payment Method</th>
-		<th>Date of Purchase</th>
+		<th>Hours Worked</th>
+		<th>Hourly Rate</th>
 		<th>Total</th>
 	</tr>
 </table>
 
 <script>
-	var itemList = [];
+	var employeeList = [];
 	var jsonItemReq = new XMLHttpRequest();
-	var changed = false;
-	var searched = false;
 	
-	getAllItems();
+	getAllEmployees();
 	
-	function getAllItems(){
+	function getAllEmployees(){
 		jsonItemReq.onreadystatechange = function() {
 			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
 				var item = JSON.parse(jsonItemReq.responseText);
 				
-				itemList = [];
+				employeeList = [];
 				
 				for(var x = 0; x < item.length; x++){
-					itemList.push(item[x]);
+					employeeList.push(item[x]);
 				}
 				
-				if(!searched){
-					updateTable(itemList);
-				}
+				updateTable(employeeList);
 			}
 		}
 		
-		jsonItemReq.open("POST", "/getPurchase/", true);
+		jsonItemReq.open("POST", "/getEmployee/", true);
 		jsonItemReq.send(-1);
 	}
 	
@@ -54,67 +55,71 @@
 			var row = table.insertRow(-1);
 			
 			//Insert new cells into the new row
-			var purchaseNumberCell = row.insertCell(0);
-			var employeeCell = row.insertCell(1);
-			var paymentCell = row.insertCell(2);
-			var dateCell = row.insertCell(3);
-			var totalCell = row.insertCell(4);
+			var employeeCell = row.insertCell(0);
+			var hoursCell = row.insertCell(1);
+			var rateCell = row.insertCell(2);
+			var totalCell = row.insertCell(3);
+			
+			getHours(hoursCell, totalCell, x);
 			
 			//input the information into the new cells
-			purchaseNumberCell.innerHTML = "<button onclick=\"\">" + items[x].PurchaseNumber + "</button>";
-////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
-			paymentCell.innerHTML = items[x].PaymentMethod;
-			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
-			
-			insertTotal(totalCell, x)
+			rateCell.innerHTML = items[x].HourlyPay;
 		}
 	}
 	
-	function insertTotal(totalCell, x){
-		var total = 0 - itemList[x].Discount;
+	function getHours(hoursCell, totalCell, x){
 		var jsonReq = new XMLHttpRequest();
+		
+		var start = 1;
+		var end = Date.now()/1000.0;
+
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
+		
+		if(startDate != null && startDate != ""){
+			start = (Date.parse(startDate)/1000.0);
+		}
+		
+		if(endDate != null && endDate != ""){
+			end = (Date.parse(endDate)/1000.0);
+		}
+		
+		var query = start + " " + end + " " + employeeList[x].EmployeeID;
 		
 		jsonReq.onreadystatechange = function() {
 			if (jsonReq.readyState == 4 && jsonReq.status == 200) {
-				var item = JSON.parse(jsonReq.responseText);
+				var timestamps = JSON.parse(jsonReq.responseText);
+				var hours = 0;
+				var clockedin = false;
+				var time;
+				console.log(timestamps);
 				
-				for(var y = 0; y < item.length; y++){
-					total += parseFloat(item[y].Price);
+				for(y = 0; y < timestamps.length; y++){
+					console.log(timestamps[y]);
+					
+					if(!clockedin && timestamps[y].Type == 1){
+						console.log("clocked in now");
+						time = timestamps[y].TimeStamp;
+						clockedin = true;
+					}else if(clockedin && timestamps[y].Type == 0){
+						console.log("clocked out now");
+						clockedin = false;
+						hours += timestamps[y].TimeStamp - time;
+					}
 				}
 				
-				totalCell.innerHTML = total;
+				hours = hours/3600;
+				
+				hoursCell.innerHTML = Math.round(hours * 10) / 10;
+				totalCell.innerHTML = Math.round(hours * parseFloat(employeeList[x].HourlyPay) * 100) / 100;
+				
+				
 			}
 		}
 		
-		jsonReq.open("POST", "/getPurchaseItems/", true);
-		jsonReq.send(itemList[x].PurchaseNumber);
+		jsonReq.open("POST", "/getTimeSheetEventsBetween/", true);
+		jsonReq.send(query);
 	}
-	
-	function search(){
-		var results = [];
-		var str = document.getElementById("searchBar").value;
-		var productNum;
-		
-		if(str === ""){
-			searched = false;
-			getAllItems();
-		}else{
-			for(x=0; x < itemList.length; x++){
-				productNum = itemList[x].PurchaseNumber + "";
-				
-				if(productNum.indexOf(str) != -1){
-					results.push(itemList[x]);
-				}
-			}
-			
-			updateTable(results);
-			
-			searched = true;
-		}
-	}
-	
-	function change(){
-		changed = true;
-	}
+
 </script>
