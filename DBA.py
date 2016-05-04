@@ -99,7 +99,7 @@ def getAllTimeSheetEvents():
 
 #Get all TimeSheetEvents that took place between beginTime and endTime
 def getTimeSheetEventsBetween(beginTime, endTime):
-	return db.select('TimeSheet', where='TimeStamp > $beginTime AND TimeStamp < $endTime', vars=locals(), order = 'EventID')
+	return db.select('TimeSheet', where='TimeStamp >= $beginTime AND TimeStamp <= $endTime', vars=locals(), order = 'EventID')
 
 #get setting with given settingID, returning None if not found
 def getSetting(settingID):
