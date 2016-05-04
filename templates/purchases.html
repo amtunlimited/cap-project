@@ -69,7 +69,6 @@
 			
 			//input the information into the new cells
 			purchaseNumberCell.innerHTML = "<button onclick=\"getReceipt(" + items[x].PurchaseNumber + ")\">" + items[x].PurchaseNumber + "</button>";
-////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
 			paymentCell.innerHTML = items[x].PaymentMethod;
 			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
@@ -124,7 +123,6 @@
 	function change(){
 		changed = true;
 	}
-<<<<<<< HEAD
 	
 	function dateRange(){
 		var start = 1;
@@ -162,7 +160,7 @@
 		
 		jsonItemReq.open("POST", "/getPurchasesBetween/", true);
 		jsonItemReq.send(time);
-=======
+	}
 
 	function getReceipt(purchase) {
 		var jsonItemReq = new XMLHttpRequest();
@@ -175,6 +173,5 @@
 		}
 		jsonItemReq.open("POST", "/receipt/", true);
 		jsonItemReq.send(purchase);	
->>>>>>> origin/master
 	}
 </script>
