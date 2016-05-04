@@ -366,7 +366,7 @@ class receipt:
 
 		total = 0
 		tax = 0
-		taxrate = 0.06
+		taxrate = DBA.getSetting("Sales Tax Rate")["SettingValue"]
 		for item in cart:
 			output += "{}X{}\n\t{}\n\n".format(DBA.getItem(item["ProductNumber"])["Description"], item["Count"], item["Price"])
 			total += float(item["Price"]) * float(item["Count"])
