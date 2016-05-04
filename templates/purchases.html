@@ -65,27 +65,30 @@
 ////////////////////////////////////////////////////////////  ^add a link to the page that prints the receipt here
 			employeeCell.innerHTML = items[x].EmployeeID;
 			paymentCell.innerHTML = items[x].PaymentMethod;
-			dateCell.innerHTML = items[x].TimeStamp;
+			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
 			
-			var total = 0;
-			
-			jsonItemReq.onreadystatechange = function() {
-				if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
-					var item = JSON.parse(jsonItemReq.responseText);
-					
-					for(var x = 0; x < item.length; x++){
-						total += item[x].Price;
-					}
-					
-					total -= itemList[x].Discount;
-					
-					totalCell.innerHTML = total;
-				}
-			}
-			
-			jsonItemReq.open("POST", "/getPurchaseItems/", true);
-			jsonItemReq.send(items[x].PurchaseNumber);
+			insertTotal(totalCell, x)
 		}
+	}
+	
+	function insertTotal(totalCell, x){
+		var total = 0 - itemList[x].Discount;
+		var jsonReq = new XMLHttpRequest();
+		
+		jsonReq.onreadystatechange = function() {
+			if (jsonReq.readyState == 4 && jsonReq.status == 200) {
+				var item = JSON.parse(jsonReq.responseText);
+				
+				for(var y = 0; y < item.length; y++){
+					total += parseFloat(item[y].Price);
+				}
+				
+				totalCell.innerHTML = total;
+			}
+		}
+		
+		jsonReq.open("POST", "/getPurchaseItems/", true);
+		jsonReq.send(itemList[x].PurchaseNumber);
 	}
 	
 	function search(){
