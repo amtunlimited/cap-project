@@ -150,14 +150,14 @@ class login:
 			session.user=emp.EmployeeID
 			session.role=emp.Role
 			session.name=emp.FirstName
-			session.loginTime = datetime.datetime.now()
-			DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockIn")
+			session.loginTime = int(time.time())
+			DBA.addTimeSheetEvent(session.user, int(time.time()), "ClockIn")
 			raise web.seeother('/')
 			
 class logout:
 	def GET(self):
 		#session.kill()
-		DBA.addTimeSheetEvent(session.user, datetime.datetime.now(), "ClockOut")
+		DBA.addTimeSheetEvent(session.user, int(time.time()), "ClockOut")
 		session.user=0
 		session.role=0
 		session.name=""
