@@ -18,7 +18,7 @@
 <br><br>
 <table style="width:99%">
 	<tr>
-		<td><button onclick="getReceipt('Cash')">Cash</button> &nbsp&nbsp <button onclick="getReceipt('Credit Card')">Credit Card</button> &nbsp&nbsp <button onclick="getReceipt('Check')">Check</button></td>
+		<td><button onclick="cashPayment()">Cash</button> &nbsp&nbsp <button onclick="getReceipt('Credit Card')">Credit Card</button> &nbsp&nbsp <button onclick="getReceipt('Check')">Check</button></td>
 		<td><label>Discount&nbsp: &nbsp <input id="discount" value="0.0" pattern="[0-9]*" onblur="updateTotal()"></label></td>
 	</tr>
 	
@@ -187,7 +187,23 @@
 			updateTotal();
 		}
 	}
-
+	
+	function cashPayment(){
+		var change = 0;
+		var total = document.getElementById("total").value;
+		var cash = prompt("How much was paid?", total);
+		
+		change = cash - total;
+		change = Math.round(change * 100) / 100;
+		
+		if (change < 0){
+			alert("Not enough payment.");
+		}else{
+			alert("Change = " + change);
+			getReceipt('Cash');
+		}
+	}
+	
 	function getReceipt(method) {
 		var receipt = new Object();
 		receipt.cart = items;
