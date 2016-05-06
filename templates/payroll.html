@@ -64,7 +64,7 @@
 			
 			//input the information into the new cells
 			employeeCell.innerHTML = items[x].EmployeeID;
-			rateCell.innerHTML = items[x].HourlyPay;
+			rateCell.innerHTML = (items[x].HourlyPay).toFixed(2);
 		}
 	}
 	
@@ -111,9 +111,10 @@
 				
 				hours = hours/3600;
 				
-				hoursCell.innerHTML = Math.round(hours * 10) / 10;
-				totalCell.innerHTML = Math.round(hours * parseFloat(employeeList[x].HourlyPay) * 100) / 100;
-				
+				//hoursCell.innerHTML = Math.round(hours * 10) / 10;
+				hoursCell.innerHTML = hours.toFixed(1);
+				//totalCell.innerHTML = Math.round(hours * parseFloat(employeeList[x].HourlyPay) * 100) / 100;
+				totalCell.innerHTML = (hours * parseFloat(employeeList[x].HourlyPay)).toFixed(2);
 				
 			}
 		}

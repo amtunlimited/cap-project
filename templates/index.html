@@ -188,6 +188,26 @@
 		}
 	}
 	
+	function clear(){
+		var table = document.getElementById("saleItems");
+		
+		for(i = table.rows.length - 1; i > 0; i--){
+			table.deleteRow(i);
+		}
+		
+		items = []
+		
+		document.getElementById("discount").value = 0;
+		document.getElementById("subtotal").value = 0;
+		document.getElementById("tax").value = 0;
+		document.getElementById("total").value = 0;
+		
+		format(document.getElementById("discount"));
+		format(document.getElementById("subtotal"));
+		format(document.getElementById("tax"));
+		format(document.getElementById("total"));
+	}
+	
 	function cashPayment(){
 		var change = 0;
 		var total = document.getElementById("total").value;
@@ -222,6 +242,7 @@
 		}
 		jsonItemReq.open("POST", "/checkout/", true);
 		jsonItemReq.send(JSON.stringify(receipt));
-
+		
+		clear();
 	}
 </script>
