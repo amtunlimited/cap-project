@@ -5,6 +5,10 @@ import json
 import DBA
 import datetime
 import time
+from web.wsgiserver import CherryPyWSGIServer
+
+CherryPyWSGIServer.ssl_certificate = "/etc/letsencrypt/live/aarontag.com/cert.pem"
+CherryPyWSGIServer.ssl_private_key = "/etc/letsencrypt/live/aarontag.com/privkey.pem"
 
 web.config.debug = False
 
