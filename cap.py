@@ -181,15 +181,22 @@ class checkout:
 		tax = 0
 		taxrate = receipt["tax"]
 		purchaseNum = DBA.addPurchase(session.user, receipt["method"], receipt["discount"], int(time.time()))
+
+		output += "{:^50}\n{:^50}\n{:^50}\n".format(DBA.getSetting("Name")["SettingValue"],\
+                                                      DBA.getSetting("Address")["SettingValue"],\
+										    DBA.getSetting("Phone Number")["SettingValue"]\
+									        )
+
 		for item in cart:
 			DBA.addPurchaseItem(purchaseNum, item["ProductNumber"], item["Count"], item["Price"])
-			DBA.incrementCount(item["ProductNumber"], -1*item["Count"])
-			output += "{}X{}\n\t{}\n\n".format(item["Description"], item["Count"], item["Price"])
+			DBA.incrementCount(item["ProductNumber"], 0*item["Count"])
+			output += "{:<3}{:<41}${:>5}\n".format(item["Count"], item["Description"], item["Price"])
 			total += float(item["Price"]) * float(item["Count"])
 			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate)
 
-		output += "Subtotal:\t{}\nTax:\t{}\nDiscount:\t{}\n\nTotal\t{}".format(total, tax, receipt["discount"],  total+tax-receipt["discount"])
+		output += "\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n".format("Subtotal:", total, "Tax:", tax, "Discount:", receipt["discount"], "Total:",  total+tax-receipt["discount"])
 
+		output += "{:^50}".format("Employee ID: "+str(session.user))
 		return output
 
 class employees:
@@ -371,17 +378,21 @@ class receipt:
 		output = ""
 
 		#output += DBA.getSetting("Name") + "\n"
+		output += "{:^50}\n{:^50}\n{:^50}\n".format(DBA.getSetting("Name")["SettingValue"],\
+                                                      DBA.getSetting("Address")["SettingValue"],\
+										    DBA.getSetting("Phone Number")["SettingValue"]\
+									        )
 
 		total = 0
 		tax = 0
 		taxrate = DBA.getSetting("Sales Tax Rate")["SettingValue"]
 		for item in cart:
-			output += "{}X{}\n\t{}\n\n".format(DBA.getItem(item["ProductNumber"])["Description"], item["Count"], item["Price"])
+			output += "{:<3}{:<41}${:>5}\n".format(item["Count"], DBA.getItem(item["ProductNumber"])["Description"], item["Price"])
 			total += float(item["Price"]) * float(item["Count"])
 			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate)
 		
 		receipt = DBA.getPurchase(purchase)[0]
-		output += "Subtotal:\t{}\nTax:\t{}\nDiscount:\t{}\n\nTotal\t{}".format(total, tax, receipt["Discount"],  total+tax-float(receipt["Discount"]))
+		output += "\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n".format("Subtotal:", total, "Tax:", tax, "Discount:", receipt["Discount"], "Total:",  total+tax-receipt["Discount"])
 
 		return output
 
