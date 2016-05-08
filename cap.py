@@ -331,9 +331,9 @@ class getTimeSheetEvents:
 class getTimeSheetEventsBetween:
 	def POST(self):
 		str = web.data()
-		dates = str.split(' ', 1)
+		dates = str.split(' ', 2)
 		
-		return json.dumps(list(DBA.getTimeSheetEventsBetween(dates[0], dates[1])))
+		return json.dumps(list(DBA.getTimeSheetEventsBetween(dates[0], dates[1], dates[2])))
 
 class threshold:
 	def GET(self):

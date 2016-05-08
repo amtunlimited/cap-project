@@ -1,12 +1,13 @@
-<!--<table style="width:99%" id="dates" border="0">
+<table style="width:99%" id="dates" border="0">
 	<tr>
-		<td>Start Date: <input type="date" id="startDate" onblur="dateRange()"> </td>
-		<td>End Date: <input type="date" id="endDate" onblur="dateRange()"> </td>
+		<td>Start Date: <input type="date" id="startDate" onblur="getAllEmployees()"> </td>
+		<td>End Date: <input type="date" id="endDate" onblur="getAllEmployees()"> </td>
 	</tr>
 </table>
 
 <br><br>
--->
+
+<!-- Comment everything above out if the daterange doesn't work-->
 <table style="width:99%" id="inventory" border="1">
 	<tr>
 		<th>Employee ID</th>
@@ -44,6 +45,10 @@
 	function updateTable(items){
 		var table = document.getElementById("inventory");
 		
+		for(i = table.rows.length - 1; i > 0; i--){
+			table.deleteRow(i);
+		}
+		
 		for(x = 0; x < items.length; x++){
 			
 			//add a row to the table
@@ -65,6 +70,22 @@
 	
 	function getHours(hoursCell, totalCell, x){
 		var jsonReq = new XMLHttpRequest();
+		
+		var start = 1;
+		var end = Date.now()/1000.0;
+
+		var startDate = document.getElementById("startDate").value;
+		var endDate = document.getElementById("endDate").value;
+		
+		if(startDate != null && startDate != ""){
+			start = (Date.parse(startDate)/1000.0);
+		}
+		
+		if(endDate != null && endDate != ""){
+			end = (Date.parse(endDate)/1000.0);
+		}
+		
+		var query = start + " " + end + " " + employeeList[x].EmployeeID;
 		
 		jsonReq.onreadystatechange = function() {
 			if (jsonReq.readyState == 4 && jsonReq.status == 200) {
@@ -90,57 +111,15 @@
 				
 				hours = hours/3600;
 				
-				hoursCell.innerHTML = hours;
-				totalCell.innerHTML = hours * parseFloat(employeeList[x].HourlyPay);
-				
-				format(totalCell);
-			}
-		}
-		
-		jsonReq.open("POST", "/getEmployeeTimestamps/", true);
-		jsonReq.send(employeeList[x].EmployeeID);
-	}
-	
-	function format(t){    
-		t.value = parseFloat(t.value.replace(/,/g, ""))
-					.toFixed(2)
-					.toString()
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	}
-	
-/*	function dateRange(){
-		var start = 1;
-		var end = Date.now()/1000.0;
-		var time = start + " " + end;
-		var startDate = document.getElementById("startDate").value;
-		var endDate = document.getElementById("endDate").value;
-		
-		if(startDate != null && startDate != ""){
-			start = (Date.parse(startDate)/1000.0) + 86400;
-		}
-		
-		if(endDate != null && endDate != ""){
-			end = (Date.parse(endDate)/1000.0) + 86400;
-		}
-		
-		time = start + " " + end;
-		
-		jsonItemReq.onreadystatechange = function() {
-			if (jsonItemReq.readyState == 4 && jsonItemReq.status == 200) {
-				var item = JSON.parse(jsonItemReq.responseText);
-				
-				itemList = [];
-				
-				for(var x = 0; x < item.length; x++){
-					itemList.push(item[x]);
-				}
+				hoursCell.innerHTML = Math.round(hours * 10) / 10;
+				totalCell.innerHTML = Math.round(hours * parseFloat(employeeList[x].HourlyPay) * 100) / 100;
 				
 				
 			}
 		}
 		
-		jsonItemReq.open("POST", "/getTimeSheetEventsBetween/", true);
-		jsonItemReq.send(time);
+		jsonReq.open("POST", "/getTimeSheetEventsBetween/", true);
+		jsonReq.send(query);
 	}
-*/
+
 </script>
