@@ -371,6 +371,7 @@ class getEmployeeTimestamps:
 
 class stats:
 	def GET(self):
+		loggedIn(2)
 		return render.stats()
 
 class receipt:
