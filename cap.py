@@ -208,7 +208,7 @@ class employees:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('employees.html')
 		#return index()
