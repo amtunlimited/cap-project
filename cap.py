@@ -193,7 +193,7 @@ class checkout:
 
 		for item in cart:
 			DBA.addPurchaseItem(purchaseNum, item["ProductNumber"], item["Count"], item["Price"])
-			DBA.incrementCount(item["ProductNumber"], 0*item["Count"])
+			DBA.incrementCount(item["ProductNumber"], -1*item["Count"])
 			output += "{:<3}{:<41}${:>5}\n".format(item["Count"], item["Description"], item["Price"])
 			total += float(item["Price"]) * float(item["Count"])
 			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate) * float(item["Taxable"])
