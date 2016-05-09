@@ -7,8 +7,9 @@ import datetime
 import time
 from web.wsgiserver import CherryPyWSGIServer
 
-CherryPyWSGIServer.ssl_certificate = "/etc/letsencrypt/live/aarontag.com/cert.pem"
-CherryPyWSGIServer.ssl_private_key = "/etc/letsencrypt/live/aarontag.com/privkey.pem"
+#Commenting out because no one else has these cert
+#CherryPyWSGIServer.ssl_certificate = "/etc/letsencrypt/live/aarontag.com/cert.pem"
+#CherryPyWSGIServer.ssl_private_key = "/etc/letsencrypt/live/aarontag.com/privkey.pem"
 
 web.config.debug = False
 
@@ -207,7 +208,7 @@ class employees:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('employees.html')
 		#return index()
@@ -263,7 +264,7 @@ class settings:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('settings.html')
 		#return index()
@@ -294,7 +295,7 @@ class purchases:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('purchases.html')
 		#return index()
@@ -328,7 +329,7 @@ class payroll:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('payroll.html')
 		#return index()
@@ -350,7 +351,7 @@ class threshold:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('threshold.html')
 		#return index()
@@ -370,6 +371,7 @@ class getEmployeeTimestamps:
 
 class stats:
 	def GET(self):
+		loggedIn(2)
 		return render.stats()
 
 class receipt:
