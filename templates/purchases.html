@@ -15,7 +15,7 @@
 		<th>Employee ID</th>
 		<th>Payment Method</th>
 		<th>Date of Purchase</th>
-		<th>Total</th>
+		<th>Subtotal</th>
 	</tr>
 </table>
 
@@ -86,7 +86,8 @@
 				var item = JSON.parse(jsonReq.responseText);
 				
 				for(var y = 0; y < item.length; y++){
-					total += parseFloat(item[y].Price);
+					total += parseFloat(item[y].Price * item[y].Count);
+					
 				}
 				
 				totalCell.innerHTML = total.toFixed(2);

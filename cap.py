@@ -393,7 +393,7 @@ class receipt:
 		for item in cart:
 			output += "{:<3}{:<41}${:>5}\n".format(item["Count"], DBA.getItem(item["ProductNumber"])["Description"], item["Price"])
 			total += float(item["Price"]) * float(item["Count"])
-			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate) * float(item["Taxable"])
+			tax += float(item["Price"]) * float(item["Count"]) * float(taxrate) * float(DBA.getItem(item["ProductNumber"])["Taxable"])
 		
 		receipt = DBA.getPurchase(purchase)[0]
 		output += "\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n{:<10}{:>40.2f}\n".format("Subtotal:", total, "Tax:", tax, "Discount:", receipt["Discount"], "Total:",  total+tax-receipt["Discount"])
