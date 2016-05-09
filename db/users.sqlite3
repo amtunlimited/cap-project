@@ -1,5 +1,5 @@
 INSERT INTO Employee (EmployeeID, FirstName, LastName, Role, Password, HourlyPay) VALUES
 	(1, "root", "root", 2, "password", 25.00),
 	(2, "big", "man", 1, "pass", 15.00),
-	(3, "small", "man", 2, "forrealstho", 7.25),
+	(3, "small", "man", 2, "cs", 7.25),
 	(4, "giraffe?", "yes", 2, "dabaus", 100.00);
