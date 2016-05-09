@@ -231,6 +231,11 @@
 		receipt.discount = parseFloat(document.getElementById("discount").value);
 		receipt.method = method;
 
+		if(items.length == 0) {
+			window.alert("No items in cart!");
+			return Null;
+		}
+
 		console.log(JSON.stringify(receipt));
 		var jsonItemReq = new XMLHttpRequest();
 		jsonItemReq.onreadystatechange = function() {
