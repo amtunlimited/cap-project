@@ -15,7 +15,7 @@
 		<th>Employee ID</th>
 		<th>Payment Method</th>
 		<th>Date of Purchase</th>
-		<th>Subtotal</th>
+		<!--<th>Subtotal</th>-->
 	</tr>
 </table>
 
@@ -65,7 +65,7 @@
 			var employeeCell = row.insertCell(1);
 			var paymentCell = row.insertCell(2);
 			var dateCell = row.insertCell(3);
-			var totalCell = row.insertCell(4);
+			//var totalCell = row.insertCell(4);
 			
 			//input the information into the new cells
 			purchaseNumberCell.innerHTML = "<button onclick=\"getReceipt(" + items[x].PurchaseNumber + ")\">" + items[x].PurchaseNumber + "</button>";
@@ -73,7 +73,7 @@
 			paymentCell.innerHTML = items[x].PaymentMethod;
 			dateCell.innerHTML = new Date(items[x].TimeStamp * 1000);
 			
-			insertTotal(totalCell, x);
+			//insertTotal(totalCell, x);
 		}
 	}
 	
