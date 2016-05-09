@@ -264,7 +264,7 @@ class settings:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('settings.html')
 		#return index()
@@ -295,7 +295,7 @@ class purchases:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('purchases.html')
 		#return index()
@@ -329,7 +329,7 @@ class payroll:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('payroll.html')
 		#return index()
@@ -351,7 +351,7 @@ class threshold:
 	def GET(self):
 		#if(session.user!=1):
 		#	raise web.seeother('/login/')
-		loggedIn(1)
+		loggedIn(2)
 
 		#index = web.template.frender('threshold.html')
 		#return index()
